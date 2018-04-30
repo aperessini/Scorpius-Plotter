@@ -89,10 +89,12 @@ class PyPlotter():
         for file in self.input_files:
             os.system('cls')
             file = os.path.join(self.input_dir, file)
+            #self.normalizeCSVs(file)
             self.choose_headers(file)
             self.get_delimiter(file)
             self.get_type(file)
             self.get_interval(file)
+            self.plot_it(file)
     
     def choose_headers(self, file):
         menu = ["Select your x-axis for %s\n" % file,
@@ -130,7 +132,7 @@ class PyPlotter():
         opt_count = 0
         while choice < len(menu): #> 0:
             for option in menu:
-                choice += 1
+                choice += 1 #-= 1
                 print "CHOICE " + str(choice)
                 opt_count += 1
                 print option
@@ -159,9 +161,9 @@ class PyPlotter():
                         self.interval = special[count-1]
                     elif func == 'choose_headers':
                         if opt_count == 1:
-                            self.x_axis = special[count-1]
+                            self.x_axis = special[count-1].strip()
                         else:
-                            self.y_axis = special[count-1]
+                            self.y_axis = special[count-1].strip()
                     else: 
                         logging.error("Something went awry...")
                         sys.exit(1)
@@ -172,7 +174,7 @@ class PyPlotter():
         with open(fName,'r+') as f:
             headers = f.readline()
         headers = headers.split(',')
-        headers = [x.strip() for x in headers if len(x.strip()) > 0]
+        headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
         return headers 
         
     def normalizeCSVs(self, logFiles, outDir, inDir, errDir, delim):   
@@ -224,7 +226,7 @@ class PyPlotter():
             else:
                 pass
 
-    def parse_loge(self, logFiles, outDir, inDir, errDir):
+    def parse_logs(self, logFiles, outDir, inDir, errDir):
         for file in logFiles:
             if len(file.split('_')) == 1:
                 if file.split('.')[-1] == 'csv':
@@ -273,8 +275,22 @@ class PyPlotter():
             else:
                 pass    
         
-    def plot_it(self):
-        pass
+    def plot_it(self, file):
+
+        #Plots graph based on x and y axis inputs
+        #First col of the file has to be date/time for now
+
+        df = pd.read_csv(file, sep=',', skipinitialspace=True, parse_dates=[0])
+        
+        x = df[self.x_axis]
+        y = df[self.y_axis]
+        plt.xlabel(self.x_axis)
+        plt.ylabel(self.y_axis)
+
+        plt.plot(x,y)
+        plt.show()
+
+        #pass
 
 
 if __name__ == "__main__":
