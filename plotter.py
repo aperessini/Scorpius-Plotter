@@ -6,7 +6,6 @@ import time
 import logging
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 from shutil import copyfileobj
 import pdb
 
@@ -281,16 +280,27 @@ class PyPlotter():
         #First col of the file has to be date/time for now
 
         df = pd.read_csv(file, sep=',', skipinitialspace=True, parse_dates=[0])
+        plot_it = df[[self.x_axis, self.y_axis]]
+        plot_fig = plot_it.plot.line(stacked=False, x=self.x_axis, alpha=0.7)
         
-        x = df[self.x_axis]
-        y = df[self.y_axis]
-        plt.xlabel(self.x_axis)
-        plt.ylabel(self.y_axis)
-
-        plt.plot(x,y)
+        plot_fig.get_yaxis().get_major_formatter().set_scientific(True)
+        
+        # Shrink current axis's height by 10% on the bottom
+        box = plot_fig.get_position()
+        plot_fig.set_position([box.x0, box.y0 + box.height * 0.2, box.width * 0.2, box.height * 0.7])
+        # Put a legend below current axis
+        plot_fig.legend(loc='upper center', bbox_to_anchor=(0.44, -0.29), ncol=2,fontsize=8)
+        plot_fig.set_ylabel(self.y_axis,fontsize=10)
+        
+        
+        fig = plot_fig.get_figure()
+        fig = plt.gcf()
+        fig.autofmt_xdate()
+        fig.tight_layout(pad=3)
+        fig.subplots_adjust(bottom=0.25)
+        fig.savefig("test.png")
         plt.show()
-
-        #pass
+        plt.close(fig)
 
 
 if __name__ == "__main__":
