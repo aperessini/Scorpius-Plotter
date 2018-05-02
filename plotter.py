@@ -78,7 +78,7 @@ class PyPlotter():
         
         validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
         if validInput.strip().lower() != 'y':
-            print("All graphs must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
+            print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
             sys.exit(0)
             
         self.input_files = [x for x in os.listdir(self.input_dir) if x.endswith(".csv") or x.endswith(".tab")]
