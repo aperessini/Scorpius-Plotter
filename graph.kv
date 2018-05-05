@@ -1,0 +1,45 @@
+#:kivy 1.0.9
+#  This is the kivy file which contains the gui information for a
+#  demo program written for the midpoint project check in CS467,
+#  Capstone, Spring 2018.
+#
+#  Team:  Scorpius
+#  Team members:  John Carrabino, Aaron Peressini, Cheryl Freeman
+
+<GraphSession>:
+    BoxLayout:
+        graph_now: line_graph
+        orientation:  'vertical'
+#       Without the following 2 lines, the buttons are small
+#       and in the lower-left corner, because the box layout
+#       is also down there.
+        size:  self.parent.size
+        pos:  self.parent.pos
+
+        Button:
+            id:  line_graph
+            on_press:  root.create_graph(self)
+            text:  "Click me to create a line graph"
+
+        Button:
+            id:  scatter_button
+            on_press:  root.create_graph(self)
+            text:  "Click me to create a scatter graph"
+
+        Button:
+            id:  bar_button
+            on_press:  root.create_graph(self)
+            text:  "Click me to create a bar graph"
+
+
+#<line_Button>:
+#    size:  300, 150
+#    text:  "Click to see a line graph"
+#
+#<scatter_Button>:
+#    size:  300, 150
+#    text:  "Click to see a scatter graph"
+#
+#
+#
+#
