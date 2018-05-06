@@ -1,0 +1,5 @@
+Finally figured out the file chooser and screen manager capabilities with Kivy, 
+so I updated Cheryl's pandasPlot.py file with the file selection functionality.
+
+Next step will be to use the get_headers code from the plotter file to get and display data headers,
+then allow user to select options via GUI 
