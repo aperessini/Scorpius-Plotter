@@ -38,7 +38,7 @@
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
-                            pos_hint:       {'x': 0.8, 'y': 0.25}
+                            pos_hint:       {'x': 0.7, 'y': 0.25}
                             on_press:       sm.current = 'screen1'
                             text:           'Next' 
 
@@ -70,7 +70,15 @@
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
-                            pos_hint:       {'x': 0.8, 'y': 0.25}
+                            pos_hint:       {'x': 0.7, 'y': 0.25}
+#  Area for future fixing:  on_press should call a python function which checks to see if
+#  the root.filename attribute is blank.  "filename" could be an argument sent to that
+#  function, so that we can re-use it to check for other kinds of things that the user
+#  needs to supply.  Anyway, after checking that the argument "filename" isn't blank, then
+#  the sm.current can be set to screen 2.  This could also be sent as an argument, so that
+#  sm.current can be set to whatever screen we want.  If the argument "filename" is blank,
+#  then some Label which is currently invisible can be filled with red text saying "Please
+#  select a file for input before continuing" or something like that.
                             on_press:       sm.current = 'screen2'
                             text:           'Next' 
 
@@ -78,24 +86,63 @@
                 size:       blayout.size
                 pos:        blayout.pos
                 name:       'screen2'
-                BoxLayout:
+                Popup:
+                    id:     x_axis_popup
+                    size:   self.parent.size
+                    pos:    self.parent.pos
+                    title:  'Select the x-axis for your graph'
+                    FloatLayout:
+    #                    orientation:    'vertical'
+                        size:           self.parent.size
+                        pos:            self.parent.pos
+                        Button:
+                            id:             next_screen
+                            size_hint_y:    0.15
+                            size_hint_x:    0.2
+                            pos_hint:       {'x': 0.7, 'y': 0.25}
+                            on_press:       sm.current = 'screen3'
+                            text:           'Next' 
+                        Button:
+                            id:             previous_screen
+                            size_hint_y:    0.15
+                            size_hint_x:    0.2
+                            pos_hint:       {'x': 0.2, 'y': 0.25}
+                            on_press:       sm.current = 'screen1'
+                            text:           'Back' 
+
+            Screen:
+                size:       blayout.size
+                pos:        blayout.pos
+                name:       'screen3'
+                Popup:
+                    id:     graph_popup
+                    size:   self.parent.size
+                    pos:    self.parent.pos
+                    title:  'Select the type of graph you wish to see'
+                FloatLayout:
                     #graph_now: line_graph
-                    orientation:    'vertical'
+#                    orientation:    'vertical'
                     size:           self.parent.size
                     pos:            self.parent.pos
 
                     Button:
                         id:         line_graph
+                        pos_hint:       {'x': 0.2, 'y': 0.25}
+                        size_hint:       [0.15, 0.2]
                         on_press:   root.create_graph(self)
                         text:       "Click me to create a line graph"
 
                     Button:
                         id:         scatter_button
+                        pos_hint:       {'x': 0.5, 'y': 0.25}
+                        size_hint:       [0.15, 0.2]
                         on_press:   root.create_graph(self)
                         text:       "Click me to create a scatter graph"
 
                     Button:
                         id:         bar_button
+                        pos_hint:       {'x': 0.7, 'y': 0.25}
+                        size_hint:       [0.15, 0.2]
                         on_press:   root.create_graph(self)
                         text:       "Click me to create a bar graph"
 
