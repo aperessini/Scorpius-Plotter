@@ -8,56 +8,81 @@
 
 <GraphSession>:
     BoxLayout:
-        id: blayout
-        orientation: 'vertical'
-        size: self.parent.size
-        pos:  self.parent.pos
+        id:             blayout
+        orientation:    'vertical'
+        size:           self.parent.size
+        pos:            self.parent.pos
         ScreenManager:
             id: sm
+
             Screen:
-                size: blayout.size
-                pos:  blayout.pos
-                name: 'screen1'
+                size:   blayout.size
+                pos:    blayout.pos
+                name:   'screen0'
                 Popup:
-                    id: file_popup
-                    size: self.parent.size
-                    pos:  self.parent.pos
-                    title: 'Select data file to graph'
+                    id:     intro_popup
+                    size:   self.parent.size
+                    pos:    self.parent.pos
+                    title:  'Scorpius Plotter'
+                    FloatLayout:
+                        orientation:  'vertical'
+                        Label:  
+#                           With thanks to https://blog.kivy.org/2014/07/wrapping-text-in-kivys-label/
+                            size_hint_y:    None
+                            size_hint_x:    0.5
+                            pos_hint:       {'x': 0, 'y': 0.8}
+                            text_size:      self.width, None
+                            height:         self.texture_size[1]
+                            text:   "Welcome to Scorpius Plotter, a graphing " + "application.  You can select your input " + "data, customize, preview, and save your graphs."
+                        Button:
+                            id:             next_screen
+                            size_hint_y:    0.15
+                            size_hint_x:    0.2
+                            pos_hint:       {'x': 0.8, 'y': 0.25}
+                            on_press:       sm.current = 'screen1'
+                            text:           'Next' 
+
+            Screen:
+                size:   blayout.size
+                pos:    blayout.pos
+                name:   'screen1'
+                Popup:
+                    id:     file_popup
+                    size:   self.parent.size
+                    pos:    self.parent.pos
+                    title:  'Select data file to graph'
                     FileChooserIconView:
-                        id: file_chooser
-                        path: root.path
-                        on_selection: root.filename = self.selection[0]; sm.current = 'screen2'
+                        id:             file_chooser
+                        path:           root.path
+                        on_selection:   root.filename = self.selection[0]; sm.current = 'screen2'
                         #file_popup.dismiss()
                         
                         #root.create_graph(None)
 
             Screen:
-                size: blayout.size
-                pos:  blayout.pos
-                name: 'screen2'
+                size:       blayout.size
+                pos:        blayout.pos
+                name:       'screen2'
                 BoxLayout:
                     #graph_now: line_graph
-                    orientation:  'vertical'
-            #       Without the following 2 lines, the buttons are small
-            #       and in the lower-left corner, because the box layout
-            #       is also down there.
-                    size:  self.parent.size
-                    pos:  self.parent.pos
+                    orientation:    'vertical'
+                    size:           self.parent.size
+                    pos:            self.parent.pos
 
                     Button:
-                        id: line_graph
-                        on_press:  root.create_graph(self)
-                        text:  "Click me to create a line graph"
+                        id:         line_graph
+                        on_press:   root.create_graph(self)
+                        text:       "Click me to create a line graph"
 
                     Button:
-                        id:  scatter_button
-                        on_press:  root.create_graph(self)
-                        text:  "Click me to create a scatter graph"
+                        id:         scatter_button
+                        on_press:   root.create_graph(self)
+                        text:       "Click me to create a scatter graph"
 
                     Button:
-                        id:  bar_button
-                        on_press:  root.create_graph(self)
-                        text:  "Click me to create a bar graph"
+                        id:         bar_button
+                        on_press:   root.create_graph(self)
+                        text:       "Click me to create a bar graph"
 
         
 
