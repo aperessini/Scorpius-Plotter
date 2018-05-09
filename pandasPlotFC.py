@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
-import plotter.py as asdf
+#from plotter import PyPlotter as asdf
+#import plotter as asdf
 
 #class Button(Widget):
  #   pass
