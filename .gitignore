@@ -1,0 +1,6 @@
+#  This is a list of files that we don't want ever want to track or commit
+*.err
+input/*.csv
+*.swp
+*.*~
+*.png
