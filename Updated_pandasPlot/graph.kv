@@ -33,7 +33,7 @@
                             pos_hint:       {'x': 0, 'y': 0.8}
                             text_size:      self.width, None
                             height:         self.texture_size[1]
-                            text:   "Welcome to Scorpius Plotter, a graphing " + "application.  You can select your input " + "data, customize, preview, and save your graphs."
+                            text:           root.welcome_text
                         Button:
                             id:             next_screen
                             size_hint_y:    0.15
@@ -51,13 +51,28 @@
                     size:   self.parent.size
                     pos:    self.parent.pos
                     title:  'Select data file to graph'
-                    FileChooserIconView:
-                        id:             file_chooser
-                        path:           root.path
-                        on_selection:   root.filename = self.selection[0]; sm.current = 'screen2'
-                        #file_popup.dismiss()
-                        
-                        #root.create_graph(None)
+                    FloatLayout:
+                        Label:
+                            size_hint_y:    None
+                            size_hint_x:    0.5
+                            pos_hint:       {'x': 0.15, 'y': 0.25}
+                            text_size:      self.width, None
+                            height:         self.texture_size[1]
+                            text:           root.path
+                        FileChooserIconView:
+                            id:             file_chooser
+                            path:           root.path
+                            on_selection:   root.filename = self.selection[0];
+                            #file_popup.dismiss()
+                            
+                            #root.create_graph(None)
+                        Button:
+                            id:             next_screen
+                            size_hint_y:    0.15
+                            size_hint_x:    0.2
+                            pos_hint:       {'x': 0.8, 'y': 0.25}
+                            on_press:       sm.current = 'screen2'
+                            text:           'Next' 
 
             Screen:
                 size:       blayout.size

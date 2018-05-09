@@ -29,10 +29,13 @@ import os
 
 class GraphSession(Widget):
     
+    welcome_text = ("Welcome to Scorpius Plotter, a graphing application."
+                    " You can select your input data, customize, preview, and"
+                    " save your graphs.")
     def __init__(self):
-        cwd = os.getcwd()
+        self.cwd = os.getcwd()
         self.filename = ''
-        self.path = cwd + '/input'
+        self.path = self.cwd + '/input'
         super(GraphSession, self).__init__()
 
     graph_now =  ObjectProperty(None)
