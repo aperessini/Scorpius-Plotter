@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-import sys, pdb
+import sys
 import csv
 import time
 import logging
@@ -16,7 +16,7 @@ CSV_EXT = '.csv'
 TAB_EXT = '.tab'
 DELIMS = ['CSV','TAB']
 
-GRAPH_TYPE = ['line','bar'] #,'scatter']
+GRAPH_TYPE = ['line'] #,'bar','scatter']
 INTERVALS = ['second', 'minute', 'hour', 'day']
 PARSER = ['daily', 'weekly', 'monthly', 'N/A (produces single graph)']
 INTERVALS_PER_DAY = {'second':86400,'minute':1440,'hour':24, 'day':1}
@@ -25,10 +25,10 @@ INTERVALS_PER_MONTH = {'second':2592000,'minute':43800,'hour':730, 'day':30}
 timestr = time.strftime("%Y-%m-%d_%H%M")
 
 def main():
-#    plotter = PyPlotter()
-#    plotter.run()
-#    sys.exit(0)
-    pass
+    plotter = PyPlotter()
+    plotter.run()
+    sys.exit(0)
+        
     
 class toPlot():
     # These values will be calculated when GUI boots up by plotter.py
@@ -75,10 +75,10 @@ class PyPlotter():
         plt.rcParams.update({'figure.max_open_warning': 0})  
         logging.basicConfig(filename=self.err_file, level=logging.DEBUG, format='%(asctime)s|%(levelname)s|%(message)s')
         
-#        validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
-#        if validInput.strip().lower() != 'y':
-#            print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
-#            sys.exit(0)
+        validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
+        if validInput.strip().lower() != 'y':
+            print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
+            sys.exit(0)
             
         self.input_files = [x for x in os.listdir(self.input_dir) if x.endswith(".csv") or x.endswith(".tab")]
         logging.info(str(self.input_files))
@@ -87,6 +87,7 @@ class PyPlotter():
         for file in self.input_files:
             self.pltr = toPlot()
             self.pltr.y_axis = []
+            self.pltr.headers = []
             os.system('cls')
             file = os.path.join(self.input_dir, file)
             self.normalizeCSV(file)
@@ -498,7 +499,7 @@ class PyPlotter():
         elif self.pltr.graph_options['type'] == 'scatter':
             pass # plot_fig = plot_it.plot.scatter(x=self.pltr.x_axis, y=self.pltr.y_axis, stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'],  alpha=0.7)
         elif self.pltr.graph_options['type'] == 'bar':
-            plot_fig = plot_it.plot(kind='bar', x=self.pltr.x_axis, y=self.pltr.y_axis, stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'],alpha=0.7)
+            pass # plot_fig = plot_it.plot(kind='bar', x=self.pltr.x_axis, y=self.pltr.y_axis, stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'],alpha=0.7)
         
         plot_fig.get_yaxis().get_major_formatter().set_scientific(True)
         
@@ -523,11 +524,4 @@ class PyPlotter():
         
 
 if __name__ == "__main__":
-#   main()
-    plotter = PyPlotter()
-    validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
-    if validInput.strip().lower() != 'y':
-        print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
-        sys.exit(0)
-#   plotter.run()
-    sys.exit(0)
+    main()
