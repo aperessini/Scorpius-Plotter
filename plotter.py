@@ -25,9 +25,10 @@ INTERVALS_PER_MONTH = {'second':2592000,'minute':43800,'hour':730, 'day':30}
 timestr = time.strftime("%Y-%m-%d_%H%M")
 
 def main():
-    plotter = PyPlotter()
-    plotter.run()
-    sys.exit(0)
+#    plotter = PyPlotter()
+#    plotter.run()
+#    sys.exit(0)
+    pass
     
 class toPlot():
     # These values will be calculated when GUI boots up by plotter.py
@@ -74,10 +75,10 @@ class PyPlotter():
         plt.rcParams.update({'figure.max_open_warning': 0})  
         logging.basicConfig(filename=self.err_file, level=logging.DEBUG, format='%(asctime)s|%(levelname)s|%(message)s')
         
-        validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
-        if validInput.strip().lower() != 'y':
-            print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
-            sys.exit(0)
+#        validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
+#        if validInput.strip().lower() != 'y':
+#            print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
+#            sys.exit(0)
             
         self.input_files = [x for x in os.listdir(self.input_dir) if x.endswith(".csv") or x.endswith(".tab")]
         logging.info(str(self.input_files))
@@ -522,4 +523,11 @@ class PyPlotter():
         
 
 if __name__ == "__main__":
-    main()
+#   main()
+    plotter = PyPlotter()
+    validInput = raw_input("Did you place the tab/csv files that you wish to graph in the input directory?\n%s\n (Y/N): " % str(self.input_dir))
+    if validInput.strip().lower() != 'y':
+        print("All input files must be placed in %s before running the demo. Goodbye!" % str(self.input_dir))
+        sys.exit(0)
+#   plotter.run()
+    sys.exit(0)

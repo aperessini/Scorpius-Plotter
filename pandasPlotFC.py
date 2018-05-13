@@ -21,8 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
-#from plotter import PyPlotter as asdf
-#import plotter as asdf
+from plotter import PyPlotter
 
 #class Button(Widget):
  #   pass
@@ -30,6 +29,7 @@ import os
 
 class GraphSession(Widget):
     
+    asdf = PyPlotter()
     welcome_text = ("Welcome to Scorpius Plotter, a graphing application."
                     " You can select your input data, customize, preview, and"
                     " save your graphs.")
