@@ -94,16 +94,16 @@ class GraphSession(Widget):
 #  some reason.  I don't know why.  So using the text attribute
 #  instead seems to be a workaround that functions.
 #        if buttonClicked.id == 'line_graph':
-        if buttonClicked.text == 'Click me to create a line graph':
+        if buttonClicked.text == 'Line Graph':
             df.plot(x=[self.x_axis], y=[self.y_axis])
             plt.show()
-        elif buttonClicked.text == 'Click me to create a scatter graph':
+        elif buttonClicked.text == 'Scatter Graph':
             #x = df[self.x_axis]
             #y = df[self.y_axis]
             #plt.scatter(x, y)
             df.plot.scatter(x=[self.x_axis], y=[self.y_axis]) #'Date/Time' is not in index error
             plt.show()
-        elif buttonClicked.text == 'Click me to create a bar graph':
+        elif buttonClicked.text == 'Bar Graph\n(hardcoded)':
             #  With thanks to stackoverflow 21331722
             df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')  #self.x_axis 
             plt.show()
