@@ -37,8 +37,10 @@ class GraphSession(Widget):
                     " You can select your input data, customize, preview, and"
                     " save your graphs.")
     x_axis = StringProperty('')
+    y_axis = StringProperty('')
 
     def __init__(self):
+        self.cur_axis = ''
         self.cwd = os.getcwd()
         self.headers = []
         self.filename = ''
@@ -51,11 +53,18 @@ class GraphSession(Widget):
     #graph_now =  ObjectProperty(None)
 
     def assign_header(self, btn):
-        self.x_axis = btn.text.strip()
-        print self.x_axis
-        self.ids.sm.current = 'screen2'
+        if self.cur_axis == 'x':
+            self.x_axis = btn.text
+            print self.x_axis
+            self.ids.sm.current = 'screenX'
+        elif self.cur_axis == 'y':
+            self.y_axis = btn.text
+            print self.y_axis
+            self.ids.sm.current = 'screenY'
 
-    def header_choices(self):
+    def header_choices(self, axis):
+        #self.headers = [x.strip() for x in self.headers if len(x.strip()) > 0]
+        self.cur_axis = axis
         layout = GridLayout(cols=2)
         print self.headers
         for header in self.headers:
@@ -64,11 +73,15 @@ class GraphSession(Widget):
             layout.add_widget(btn)
         layout.add_widget(Button(text='Next', on_press=lambda *args: self.popup.dismiss()))
         content = layout
-        self.popup = Popup(content=content, title='Select your x-axis', size_hint=(0.8, 0.8))
+        title = 'Select your ' + self.cur_axis + '-axis'
+        self.popup = Popup(content=content, title=title, size_hint=(0.9, 0.9))
         self.popup.open()
 
-    def print_axis(self):
-        print self.x_axis
+    def print_axis(self, axis):
+        if axis == 'x':
+            print self.x_axis
+        elif axis == 'y':
+            print self.y_axis
 
 
     def create_graph(self, buttonClicked):  
@@ -76,19 +89,23 @@ class GraphSession(Widget):
         #popup = Popup(content=content)
         #popup.open()
         df = self.readFile(self)
+        print df
 #  I'd prefer to use the following line, but it doesn't work for
 #  some reason.  I don't know why.  So using the text attribute
 #  instead seems to be a workaround that functions.
 #        if buttonClicked.id == 'line_graph':
         if buttonClicked.text == 'Click me to create a line graph':
-            df.plot(x=['Date/Time'], y=[' Uptime-hostname:port'])
+            df.plot(x=[self.x_axis], y=[self.y_axis])
             plt.show()
         elif buttonClicked.text == 'Click me to create a scatter graph':
-            df.plot.scatter(x=[' Used JVM Mem-hostname:port'], y=[' JVM Process Cpu Load-hostname:port'])
+            #x = df[self.x_axis]
+            #y = df[self.y_axis]
+            #plt.scatter(x, y)
+            df.plot.scatter(x=[self.x_axis], y=[self.y_axis]) #'Date/Time' is not in index error
             plt.show()
         elif buttonClicked.text == 'Click me to create a bar graph':
             #  With thanks to stackoverflow 21331722
-            df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')
+            df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')  #self.x_axis 
             plt.show()
         else:
             pass
