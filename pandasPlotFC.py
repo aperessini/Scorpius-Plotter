@@ -71,7 +71,7 @@ class GraphSession(Widget):
             btn = Button(text=header)
             btn.bind(on_press=self.assign_header)
             layout.add_widget(btn)
-        layout.add_widget(Button(text='Next', on_press=lambda *args: self.popup.dismiss()))
+        layout.add_widget(Button(text='Next', color=[0.313, 1, 0.815, 1], on_press=lambda *args: self.popup.dismiss()))
         content = layout
         title = 'Select your ' + self.cur_axis + '-axis'
         self.popup = Popup(content=content, title=title, size_hint=(0.9, 0.9))
