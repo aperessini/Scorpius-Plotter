@@ -12,15 +12,18 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
+import sys
 from plotter_class import PyPlotter
 
 #class Button(Widget):
@@ -29,17 +32,44 @@ from plotter_class import PyPlotter
 
 class GraphSession(Widget):
     
-    asdf = PyPlotter()
+    #asdf = PyPlotter()
     welcome_text = ("Welcome to Scorpius Plotter, a graphing application."
                     " You can select your input data, customize, preview, and"
                     " save your graphs.")
+    x_axis = StringProperty('')
+
     def __init__(self):
         self.cwd = os.getcwd()
+        self.headers = []
         self.filename = ''
-        self.path = self.cwd + '/input'
+        self.x_axis = ''
+        self.y_axis = ''
+        self.path = self.cwd + "\input"
+        self.plotter = PyPlotter()
         super(GraphSession, self).__init__()
 
-    graph_now =  ObjectProperty(None)
+    #graph_now =  ObjectProperty(None)
+
+    def assign_header(self, btn):
+        self.x_axis = btn.text.strip()
+        print self.x_axis
+        self.ids.sm.current = 'screen2'
+
+    def header_choices(self):
+        layout = GridLayout(cols=2)
+        print self.headers
+        for header in self.headers:
+            btn = Button(text=header)
+            btn.bind(on_press=self.assign_header)
+            layout.add_widget(btn)
+        layout.add_widget(Button(text='Next', on_press=lambda *args: self.popup.dismiss()))
+        content = layout
+        self.popup = Popup(content=content, title='Select your x-axis', size_hint=(0.8, 0.8))
+        self.popup.open()
+
+    def print_axis(self):
+        print self.x_axis
+
 
     def create_graph(self, buttonClicked):  
         #content = Button(text=self.filename)

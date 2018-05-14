@@ -62,7 +62,7 @@
                         FileChooserIconView:
                             id:             file_chooser
                             path:           root.path
-                            on_selection:   root.filename = self.selection[0];
+                            on_selection:   root.filename = self.selection[0]
                             #file_popup.dismiss()
                             
                             #root.create_graph(None)
@@ -79,7 +79,7 @@
 #  sm.current can be set to whatever screen we want.  If the argument "filename" is blank,
 #  then some Label which is currently invisible can be filled with red text saying "Please
 #  select a file for input before continuing" or something like that.
-                            on_press:       sm.current = 'screen2'
+                            on_press:       root.headers = root.plotter.get_headers(root.filename); root.header_choices()
                             text:           'Next' 
 
             Screen:
@@ -96,16 +96,15 @@
                         size:           self.parent.size
                         pos:            self.parent.pos
                         Label:
-                            text:       root.path
-#                           text:       str(root.asdf.get_headers(root.filename))
-#                           text:       str(root.asdf.get_headers(root.path))
+                            text:       'You have selected ' + root.x_axis + ' as your x-axis. Continue?'
+                            #text:       root.filename
                             
                         Button:
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.7, 'y': 0.25}
-                            on_press:       sm.current = 'screen3'
+                            on_press:       root.print_axis(); sm.current = 'screen3'
                             text:           'Next' 
                         Button:
                             id:             previous_screen
