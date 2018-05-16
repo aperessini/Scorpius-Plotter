@@ -68,7 +68,7 @@ class GraphSession(Widget):
         self.popup.open()
 
     def ensureInput(self):
-        self.plotter.get_headers(self.filename)
+        self.headers = self.plotter.get_headers(self.filename)
         self.header_choices('x')
 
     def print_axis(self, axis):

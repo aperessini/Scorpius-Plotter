@@ -268,7 +268,7 @@ class PyPlotter():
             headers = f.readline()
         headers = headers.split(',')
         headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
-        #print headers
+#        print headers
         return headers 
         
     def normalizeCSV(self, file):   
