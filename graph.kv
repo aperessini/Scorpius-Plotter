@@ -37,7 +37,7 @@
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
-                            pos_hint:       {'x': 0.85, 'y': 0.1}
+                            pos_hint:       {'x': 0.79, 'y': 0.01}
                             on_press:       sm.current = 'screen1'
                             text:           'Next' 
 
@@ -66,7 +66,7 @@
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
-                            pos_hint:       {'x': 0.7, 'y': 0.25}
+                            pos_hint:       {'x': 0.79, 'y': 0.01}
 #  Area for future fixing:  on_press should call a python function which checks to see if
 #  the root.filename attribute is blank.  "filename" could be an argument sent to that
 #  function, so that we can re-use it to check for other kinds of things that the user
@@ -99,7 +99,7 @@
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
-                            pos_hint:       {'x': 0.7, 'y': 0.25}
+                            pos_hint:       {'x': 0.79, 'y': 0.01}
                             on_press:       root.print_axis('x'); root.header_choices('y')
                             text:           'Next' 
                         Button:
@@ -140,7 +140,7 @@
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
-                            pos_hint:       {'x': 0.7, 'y': 0.25}
+                            pos_hint:       {'x': 0.79, 'y': 0.01}
                             on_press:       root.print_axis('y'); sm.current = 'screen3'
                             text:           'Next' 
                         Button:

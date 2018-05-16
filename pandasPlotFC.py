@@ -53,18 +53,15 @@ class GraphSession(Widget):
     def header_choices(self, axis):
         self.cur_axis = axis
         chooseAxisScreen = FloatLayout()
-        headerButtons = GridLayout(cols=2, size_hint_y=0.3, pos_hint={'top': 0.9})
+        headerButtons = GridLayout(cols=2, size_hint_y=0.7, size_hint_x=0.9, pos_hint={'x': 0.05, 'top': 0.9})
         chooseAxisScreen.add_widget(headerButtons)
-        nextButton = Button(text = 'Next', size_hint_y=0.15, size_hint_x=0.2, pos_hint={'x': 0.7, 'y': 0.25}) 
-#        nextButton = Button(text = 'Next', size_hint_y=0.15, size_hint_x=0.2, pos_hint=(0.7, 0.25))
+        nextButton = Button(text = 'Next', size_hint_y=0.15, size_hint_x=0.2, pos_hint={'x': 0.79, 'y': 0.01}, on_press=lambda *args: self.popup.dismiss()) 
         chooseAxisScreen.add_widget(nextButton)
-        print self.headers
+#        print self.headers
         for header in self.headers:
             btn = Button(text=header)
             btn.bind(on_press=self.assign_header)
             headerButtons.add_widget(btn)
-        headerButtons.add_widget(Button(text='Next', color=[0.313, 1, 0.815, 1], on_press=lambda *args: self.popup.dismiss()))
-#        content = headerButtons
         content = chooseAxisScreen
         title = 'Select your ' + self.cur_axis + '-axis'
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
