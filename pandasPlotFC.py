@@ -67,6 +67,10 @@ class GraphSession(Widget):
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
         self.popup.open()
 
+    def ensureInput(self):
+        self.plotter.get_headers(self.filename)
+        self.header_choices('x')
+
     def print_axis(self, axis):
         if axis == 'x':
             print self.x_axis
