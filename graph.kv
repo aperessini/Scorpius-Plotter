@@ -1,7 +1,6 @@
 #:kivy 1.0.9
 #  This is the kivy file which contains the gui information for a
-#  demo program written for the midpoint project check in CS467,
-#  Capstone, Spring 2018.
+#  graphing program written for Capstone, Spring 2018.
 #
 #  Team:  Scorpius
 #  Team members:  John Carrabino, Aaron Peressini, Cheryl Freeman
@@ -63,9 +62,6 @@
                             id:             file_chooser
                             path:           root.path
                             on_selection:   root.filename = self.selection[0]
-                            #file_popup.dismiss()
-                            
-                            #root.create_graph(None)
                         Button:
                             id:             next_screen
                             size_hint_y:    0.15
