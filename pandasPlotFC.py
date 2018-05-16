@@ -74,20 +74,7 @@ class GraphSession(Widget):
             self.headers = self.plotter.get_headers(self.filename)
             self.header_choices('x')
         else:
-#            self.ids.blayout.ids.sm.ids.file_screen.ids.file_popup.ids.myfloat.ids.errorlabel.text = 'whatever'
-#            print input_is_missing_msg
-#            print label_to_appear
-##            self.ids.'%s'.text % (label_to_appear) = input_is_missing_msg
-##            self.ids.errorlabel.text = input_is_missing_msg
-#            for thing in self.ids:
-#                print thing
-#                if thing == str(label_to_appear):
-#                    mylabel = thing.id
-#                else:
-#                    mylabel = 'whatever'
-#            print self.ids.get(mylabel)
             label_to_appear.text = input_is_missing_msg
-            pass
 
     def print_axis(self, axis):
         if axis == 'x':

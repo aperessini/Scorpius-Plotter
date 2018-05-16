@@ -100,8 +100,8 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.ensureInput(root.x_axis, root.prompt_for_x_axis)
-#                            on_press:       root.print_axis('x'); root.header_choices('y')
+#                            on_press:       root.ensureInput(root.x_axis, root.prompt_for_x_axis, x_errorlabel)
+                            on_press:       root.print_axis('x'); root.header_choices('y')
                             text:           'Next' 
                         Button:
                             id:             change_x_axis
