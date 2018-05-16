@@ -45,12 +45,14 @@
                 size:   blayout.size
                 pos:    blayout.pos
                 name:   'screen1'
+                id:     file_screen
                 Popup:
                     id:     file_popup
                     size:   self.parent.size
                     pos:    self.parent.pos
                     title:  'Select data file to graph'
                     FloatLayout:
+                        id:                 myfloat
                         Label:
                             size_hint_y:    None
                             size_hint_x:    0.5
@@ -75,8 +77,16 @@
 #  sm.current can be set to whatever screen we want.  If the argument "filename" is blank,
 #  then some Label which is currently invisible can be filled with red text saying "Please
 #  select a file for input before continuing" or something like that.
-                            on_press:       root.ensureInput()
+                            on_press:       root.ensureInput(root.filename, root.prompt_for_filename)
                             text:           'Next' 
+                        Label:
+                            id:             errorlabel
+                            color:          1.0, .27, 0.0, 1.0
+                            pos_hint:       {'x': 0.15, 'y': 0.1}
+                            size_hint_y:    None
+                            size_hint_x:    0.5
+                            text_size:      self.width, None
+                            height:         self.texture_size[1]
 
             Screen:
                 size:       blayout.size

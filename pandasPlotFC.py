@@ -26,6 +26,7 @@ class GraphSession(Widget):
     welcome_text = ("Welcome to Scorpius Plotter, a graphing application."
                     " You can select your input data, customize, preview, and"
                     " save your graphs.")
+    prompt_for_filename = "Please select the file containing the data you wish to graph."
     x_axis = StringProperty('')
     y_axis = StringProperty('')
 
@@ -67,9 +68,20 @@ class GraphSession(Widget):
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
         self.popup.open()
 
-    def ensureInput(self):
-        self.headers = self.plotter.get_headers(self.filename)
-        self.header_choices('x')
+    def ensureInput(self, data_needed, input_is_missing_msg):
+        if (data_needed != ''):
+            self.headers = self.plotter.get_headers(self.filename)
+            self.header_choices('x')
+        else:
+#            self.ids.blayout.ids.sm.ids.file_screen.ids.file_popup.ids.myfloat.ids.errorlabel.text = 'whatever'
+            print input_is_missing_msg
+            self.ids.errorlabel.text = input_is_missing_msg
+#            print ''
+#            print ''
+#            print ''
+#            print ''
+#            print self.ids[errorlabel]
+            pass
 
     def print_axis(self, axis):
         if axis == 'x':
