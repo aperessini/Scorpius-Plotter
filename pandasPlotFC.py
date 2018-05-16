@@ -27,6 +27,7 @@ class GraphSession(Widget):
                     " You can select your input data, customize, preview, and"
                     " save your graphs.")
     prompt_for_filename = "Please select the file containing the data you wish to graph."
+    prompt_for_x_axis = "Please select the column of data you wish to use for your graph's x-axis."
     x_axis = StringProperty('')
     y_axis = StringProperty('')
 
@@ -68,19 +69,24 @@ class GraphSession(Widget):
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
         self.popup.open()
 
-    def ensureInput(self, data_needed, input_is_missing_msg):
+    def ensureInput(self, data_needed, input_is_missing_msg, label_to_appear):
         if (data_needed != ''):
             self.headers = self.plotter.get_headers(self.filename)
             self.header_choices('x')
         else:
 #            self.ids.blayout.ids.sm.ids.file_screen.ids.file_popup.ids.myfloat.ids.errorlabel.text = 'whatever'
-            print input_is_missing_msg
-            self.ids.errorlabel.text = input_is_missing_msg
-#            print ''
-#            print ''
-#            print ''
-#            print ''
-#            print self.ids[errorlabel]
+#            print input_is_missing_msg
+#            print label_to_appear
+##            self.ids.'%s'.text % (label_to_appear) = input_is_missing_msg
+##            self.ids.errorlabel.text = input_is_missing_msg
+#            for thing in self.ids:
+#                print thing
+#                if thing == str(label_to_appear):
+#                    mylabel = thing.id
+#                else:
+#                    mylabel = 'whatever'
+#            print self.ids.get(mylabel)
+            label_to_appear.text = input_is_missing_msg
             pass
 
     def print_axis(self, axis):
