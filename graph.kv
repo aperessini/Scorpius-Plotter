@@ -85,7 +85,7 @@
                 pos:        blayout.pos
                 name:       'screenX'
                 Popup:
-                    id:     x_axis_popup
+                    id:     x_axis_confirmation_popup
                     size:   self.parent.size
                     pos:    self.parent.pos
                     title:  'Confirm x-axis selection'
@@ -100,7 +100,6 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-#                            on_press:       root.ensureInput(root.x_axis, root.prompt_for_x_axis, x_errorlabel)
                             on_press:       root.print_axis('x'); root.header_choices('y')
                             text:           'Next' 
                         Button:

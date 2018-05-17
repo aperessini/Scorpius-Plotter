@@ -29,6 +29,7 @@ class GraphSession(Widget):
                     " save your graphs.")
     prompt_for_filename = "Please select the file containing the data you wish to graph."
     prompt_for_x_axis = "Please select the column of data you wish to use for your graph's x-axis."
+    prompt_for_y_ayis = "Please select the column of data you wish to use for your graph's y-ayis."
     x_axis = StringProperty('')
     y_axis = StringProperty('')
 
@@ -54,26 +55,44 @@ class GraphSession(Widget):
             self.ids.sm.current = 'screenY'
 
     def header_choices(self, axis):
-        """ Dynamically construct the next pop-up screen
-        """
+        """ Dynamically construct the next pop-up screen """
         self.cur_axis = axis
 
         #  This will hold all the other elements
         chooseAxisScreen = FloatLayout()
 
         #  Inside of the float layout, we'll have a grid layout
-        headerButtons = GridLayout(cols=2, size_hint_y=0.7, size_hint_x=0.9, pos_hint={'x': 0.05, 'top': 0.9})
+        headerButtons = GridLayout(
+                cols=2, size_hint_y=0.7, size_hint_x=0.9, 
+                pos_hint={'x': 0.05, 'top': 0.9})
         chooseAxisScreen.add_widget(headerButtons)
 
-        #  and a "Next" button
-        nextButton = Button(text = 'Next', size_hint_y=0.15, size_hint_x=0.2, pos_hint={'x': 0.79, 'y': 0.01}, on_press=lambda *args: self.popup.dismiss()) 
-        chooseAxisScreen.add_widget(nextButton)
-
         #  and 2 labels which appear when the user doesn't make a selection
-        x_axis_missing = Label(color = (1.0, .27, 0.0, 1.0), pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, size_hint_x = 0.5, text = 'Hey there')
+        x_axis_missing = Label(
+                color = (1.0, .27, 0.0, 1.0), 
+                pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
+                size_hint_x = 0.5)
         chooseAxisScreen.add_widget(x_axis_missing)
-        y_axis_missing = Label(color = (1.0, .27, 0.0, 1.0), pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, size_hint_x = 0.5, text = 'I am here too')
+        y_axis_missing = Label(color = (1.0, .27, 0.0, 1.0), 
+                pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
+                size_hint_x = 0.5)
         chooseAxisScreen.add_widget(y_axis_missing)
+
+        #  and a "Next" button
+        #  Thanks to https://stackoverflow.com/questions/12368390
+        #  for help with the lambda
+        #  Setting on_press is not passing a callback to the button,
+        #  but actually executing the function.
+        #  Passing in an unnamed lambda function will call the
+        #  desired function when the on_press event is raised
+        #  Thanks to https://stackoverflow.com/questions/16215045
+        #  for help with the throw-away argument _
+        nextButton = Button(
+                text = 'Next', size_hint_y=0.15, size_hint_x=0.2, 
+                pos_hint={'x': 0.79, 'y': 0.01}, 
+                on_press = lambda _: self.ensureInput(
+                    self.x_axis, self.prompt_for_x_axis, x_axis_missing, 'y')) 
+        chooseAxisScreen.add_widget(nextButton)
 
 #        print self.headers
         for header in self.headers:
@@ -85,7 +104,9 @@ class GraphSession(Widget):
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
         self.popup.open()
 
-    def ensureInput(self, data_needed, input_is_missing_msg, label_to_appear, next_axis):
+    def ensureInput(
+            self, data_needed, input_is_missing_msg, label_to_appear, 
+            next_axis):
         if (data_needed != ''):
             self.headers = self.plotter.get_headers(self.filename)
             self.header_choices(next_axis)
