@@ -46,11 +46,12 @@
                 pos:    blayout.pos
                 name:   'screen1'
                 id:     file_screen
+                on_enter:       root.clear_previous_selections()
                 Popup:
-                    id:     file_popup
-                    size:   self.parent.size
-                    pos:    self.parent.pos
-                    title:  'Select data file to graph'
+                    id:         file_popup
+                    size:       self.parent.size
+                    pos:        self.parent.pos
+                    title:      'Select data file to graph'
                     FloatLayout:
                         id:                 myfloat
                         Label:

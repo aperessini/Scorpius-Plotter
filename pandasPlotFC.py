@@ -125,6 +125,17 @@ class GraphSession(Widget):
             print self.y_axis
 
 
+    def clear_previous_selections(self):
+        """  We need this because a user might select a file and
+             x-axis, then go back and change their data file.
+             The previous axes chosen need to be erased.
+        """
+        self.headers = []
+        self.filename = ''
+        self.x_axis = ''
+        self.y_axis = ''
+
+
     def create_graph(self, buttonClicked):  
         df = self.readFile(self)
         print df
