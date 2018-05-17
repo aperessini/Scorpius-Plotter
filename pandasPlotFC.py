@@ -10,6 +10,7 @@ from kivy.properties import StringProperty
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -53,12 +54,27 @@ class GraphSession(Widget):
             self.ids.sm.current = 'screenY'
 
     def header_choices(self, axis):
+        """ Dynamically construct the next pop-up screen
+        """
         self.cur_axis = axis
+
+        #  This will hold all the other elements
         chooseAxisScreen = FloatLayout()
+
+        #  Inside of the float layout, we'll have a grid layout
         headerButtons = GridLayout(cols=2, size_hint_y=0.7, size_hint_x=0.9, pos_hint={'x': 0.05, 'top': 0.9})
         chooseAxisScreen.add_widget(headerButtons)
+
+        #  and a "Next" button
         nextButton = Button(text = 'Next', size_hint_y=0.15, size_hint_x=0.2, pos_hint={'x': 0.79, 'y': 0.01}, on_press=lambda *args: self.popup.dismiss()) 
         chooseAxisScreen.add_widget(nextButton)
+
+        #  and 2 labels which appear when the user doesn't make a selection
+        x_axis_missing = Label(color = (1.0, .27, 0.0, 1.0), pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, size_hint_x = 0.5, text = 'Hey there')
+        chooseAxisScreen.add_widget(x_axis_missing)
+        y_axis_missing = Label(color = (1.0, .27, 0.0, 1.0), pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, size_hint_x = 0.5, text = 'I am here too')
+        chooseAxisScreen.add_widget(y_axis_missing)
+
 #        print self.headers
         for header in self.headers:
             btn = Button(text=header)
@@ -69,10 +85,11 @@ class GraphSession(Widget):
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
         self.popup.open()
 
-    def ensureInput(self, data_needed, input_is_missing_msg, label_to_appear):
+    def ensureInput(self, data_needed, input_is_missing_msg, label_to_appear, next_axis):
         if (data_needed != ''):
             self.headers = self.plotter.get_headers(self.filename)
-            self.header_choices('x')
+            self.header_choices(next_axis)
+            label_to_appear.text = ''
         else:
             label_to_appear.text = input_is_missing_msg
 
