@@ -70,7 +70,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.ensureInput(root.filename, root.prompt_for_filename, file_errorlabel, 'x')
+                            on_press:       root.ensureInput('file', file_errorlabel, 'x')
                             text:           'Next' 
                         Label:
                             id:             file_errorlabel
@@ -131,7 +131,6 @@
                     pos:    self.parent.pos
                     title:  'Confirm y-axis selection'
                     FloatLayout:
-    #                    orientation:    'vertical'
                         size:           self.parent.size
                         pos:            self.parent.pos
                         Label:
@@ -153,15 +152,14 @@
                             on_press:       root.header_choices('y')
                             text:           'Change Y-Axis \nSelection'
                             halign:         'center'
-                            #text_size:      self.size
                         Button:
                             id:             previous_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.2, 'y': 0.25}
                             on_press:       root.header_choices('x') #sm.current = 'screen1'
-                            halign:         'center'
                             text:           'Change X-Axis \nSelection'
+                            halign:         'center'
 
             Screen:
                 size:       blayout.size

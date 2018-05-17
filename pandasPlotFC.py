@@ -29,7 +29,7 @@ class GraphSession(Widget):
                     " save your graphs.")
     prompt_for_filename = "Please select the file containing the data you wish to graph."
     prompt_for_x_axis = "Please select the column of data you wish to use for your graph's x-axis."
-    prompt_for_y_ayis = "Please select the column of data you wish to use for your graph's y-ayis."
+    prompt_for_y_axis = "Please select the column of data you wish to use for your graph's y-axis."
     x_axis = StringProperty('')
     y_axis = StringProperty('')
 
@@ -45,6 +45,7 @@ class GraphSession(Widget):
         super(GraphSession, self).__init__()
 
     def assign_header(self, btn):
+        print "Inside assign_header"
         if self.cur_axis == 'x':
             self.x_axis = btn.text
             print self.x_axis
@@ -67,16 +68,20 @@ class GraphSession(Widget):
                 pos_hint={'x': 0.05, 'top': 0.9})
         chooseAxisScreen.add_widget(headerButtons)
 
-        #  and 2 labels which appear when the user doesn't make a selection
-        x_axis_missing = Label(
+        #  and a label which appears when the user doesn't make a selection
+        axis_missing = Label(
                 color = (1.0, .27, 0.0, 1.0), 
                 pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
                 size_hint_x = 0.5)
-        chooseAxisScreen.add_widget(x_axis_missing)
-        y_axis_missing = Label(color = (1.0, .27, 0.0, 1.0), 
-                pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
-                size_hint_x = 0.5)
-        chooseAxisScreen.add_widget(y_axis_missing)
+        chooseAxisScreen.add_widget(axis_missing)
+
+        #  Set arguments for the Next button on_press
+        if (axis == 'x'):
+            data_needed = 'x'
+            next_axis = 'y'
+        elif (axis == 'y'):
+            data_needed = 'y'
+            next_axis = None
 
         #  and a "Next" button
         #  Thanks to https://stackoverflow.com/questions/12368390
@@ -91,7 +96,7 @@ class GraphSession(Widget):
                 text = 'Next', size_hint_y=0.15, size_hint_x=0.2, 
                 pos_hint={'x': 0.79, 'y': 0.01}, 
                 on_press = lambda _: self.ensureInput(
-                    self.x_axis, self.prompt_for_x_axis, x_axis_missing, 'y')) 
+                    data_needed, axis_missing, next_axis))
         chooseAxisScreen.add_widget(nextButton)
 
 #        print self.headers
@@ -105,16 +110,32 @@ class GraphSession(Widget):
         self.popup.open()
 
     def ensureInput(
-            self, data_needed, input_is_missing_msg, label_to_appear, 
-            next_axis):
-        if (data_needed != ''):
-            if (data_needed == self.filename):
+            self, data_needed, label_to_appear, next_axis):
+        if (data_needed == 'file'):
+            contents_needed = self.filename
+            input_is_missing_msg = self.prompt_for_filename
+        elif (data_needed == 'x'):
+            contents_needed = self.x_axis
+            input_is_missing_msg = self.prompt_for_x_axis
+        elif (data_needed == 'y'):
+            contents_needed = self.y_axis
+            input_is_missing_msg = self.prompt_for_y_axis
+        else:
+            print "Weird"
+
+        if (contents_needed != ''):
+            if (data_needed == 'file'):
                 self.headers = self.plotter.get_headers(self.filename)
                 self.header_choices(next_axis)
                 label_to_appear.text = ''
-            elif (data_needed == self.x_axis):
+            elif (data_needed == 'x'):
                 self.ids.sm.current = 'screenX'
                 self.popup.dismiss() 
+            elif (data_needed == 'y'):
+                self.ids.sm.current = 'screenY'
+                self.popup.dismiss()
+            else:
+                print "not sure"
         else:
             label_to_appear.text = input_is_missing_msg
 
@@ -138,7 +159,7 @@ class GraphSession(Widget):
 
     def create_graph(self, buttonClicked):  
         df = self.readFile(self)
-        print df
+#        print df
 
 #  I'd prefer to use the following line, but it doesn't work for
 #  some reason.  I don't know why.  So using the text attribute
