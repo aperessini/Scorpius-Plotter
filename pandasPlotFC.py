@@ -108,9 +108,13 @@ class GraphSession(Widget):
             self, data_needed, input_is_missing_msg, label_to_appear, 
             next_axis):
         if (data_needed != ''):
-            self.headers = self.plotter.get_headers(self.filename)
-            self.header_choices(next_axis)
-            label_to_appear.text = ''
+            if (data_needed == self.filename):
+                self.headers = self.plotter.get_headers(self.filename)
+                self.header_choices(next_axis)
+                label_to_appear.text = ''
+            elif (data_needed == self.x_axis):
+                self.ids.sm.current = 'screenX'
+                self.popup.dismiss() 
         else:
             label_to_appear.text = input_is_missing_msg
 
