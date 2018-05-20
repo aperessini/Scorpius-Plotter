@@ -46,6 +46,11 @@ class GraphSession(Widget):
 
     def assign_header(self, btn):
         print "Inside assign_header"
+        btn.color = [.3, .9, .5, 1]
+        buttons = self.headerButtons.children[:]
+        for x in buttons:
+            if x != btn:
+                x.color = [0, 0, 0, 1]
         if self.cur_axis == 'x':
             self.x_axis = btn.text
             print self.x_axis
@@ -63,10 +68,10 @@ class GraphSession(Widget):
         chooseAxisScreen = FloatLayout()
 
         #  Inside of the float layout, we'll have a grid layout
-        headerButtons = GridLayout(
+        self.headerButtons = GridLayout(
                 cols=2, size_hint_y=0.7, size_hint_x=0.9, 
                 pos_hint={'x': 0.05, 'top': 0.9})
-        chooseAxisScreen.add_widget(headerButtons)
+        chooseAxisScreen.add_widget(self.headerButtons)
 
         #  and a label which appears when the user doesn't make a selection
         axis_missing = Label(
@@ -102,8 +107,8 @@ class GraphSession(Widget):
 #        print self.headers
         for header in self.headers:
             btn = Button(text=header)
-            btn.bind(on_press=self.assign_header)
-            headerButtons.add_widget(btn)
+            btn.bind(on_press=self.assign_header)   
+            self.headerButtons.add_widget(btn)
         content = chooseAxisScreen
         title = 'Select your ' + self.cur_axis + '-axis'
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
