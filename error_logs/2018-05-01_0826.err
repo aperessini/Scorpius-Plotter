@@ -1,4 +1,0 @@
-2018-05-01 08:26:04,977|INFO|TEST
-2018-05-01 08:26:06,816|INFO|['RuntimeSmd.csv', 'Tomcat.csv']
-2018-05-01 08:26:15,125|DEBUG|findfont: Matching :family=sans-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans (u'C:\\Users\\aaron\\Python27\\lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf') with score of 0.050000
-2018-05-01 08:26:15,272|DEBUG|findfont: Matching :family=sans-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=8.0 to DejaVu Sans (u'C:\\Users\\aaron\\Python27\\lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf') with score of 0.050000
