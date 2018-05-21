@@ -15,6 +15,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.checkbox import CheckBox
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -196,6 +197,23 @@ class GraphSession(Widget):
     def readFile(self, df):
         return pd.read_csv(self.filename)
     
+    def recordDelimiterChoice(self, grid):
+#  Thanks to https://stackoverflow.com/questions/610883
+#        print grid
+        for x in grid:
+            try:
+#                print x.active
+#                print x.group
+                if x.active:
+#                    print x.name
+                    self.delim = x.name
+            except AttributeError:
+                pass
+        print 'The delimiter right now is ' + self.delim
+        self.headers = self.plotter.get_headers(self.filename, self.delim)
+        self.header_choices('x')
+
+
 class GraphApp(App):
     def build(self):
         session = GraphSession()

@@ -101,14 +101,17 @@
                             height:         self.texture_size[1]
                             text:           str(root.filename)
                         BoxLayout:
+                            id:             centeringRadios
                             orientation:    'horizontal'
                             size_hint_y:     0.5
                             Widget:
                             GridLayout:
+                                id:             groupGrid
                                 cols:           2
                                 size_hint_x:     0.5
                                 CheckBox:
                                     active:         True
+                                    name:           '\t'
         #  Note for future improvement:  read the file extension and if it is a .csv file, default so that
         #  the comma delimiter is checked instead of the tab.
                                     group:          'delimiters'
@@ -118,6 +121,7 @@
                                     halign:         'left'
                                     valign:         'middle'
                                 CheckBox:
+                                    name:            ','
                                     group:          'delimiters'
                                 Label:
                                     text:           'Comma'
@@ -125,6 +129,7 @@
                                     halign:         'left'
                                     valign:         'middle'
                                 CheckBox:
+                                    name:             ';'
                                     group:          'delimiters'
                                 Label:
                                     text:           'Semi-colon'
@@ -132,6 +137,7 @@
                                     halign:         'left'
                                     valign:         'middle'
                                 CheckBox:
+                                    name:            ' '
                                     group:          'delimiters'
                                 Label:
                                     text:           'Space'
@@ -144,7 +150,8 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.ensureInput('delim', None, 'x')
+#  The last children reference is for the grid layout
+                            on_press:       root.recordDelimiterChoice(self.parent.children[1].children[1].children)
                             text:           'Next' 
 
 

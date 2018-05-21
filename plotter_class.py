@@ -263,10 +263,10 @@ class PyPlotter():
             else: 
                 print"\nSorry, %s is not a valid option,\n Enter Y/N or q to quit"
     
-    def get_headers(self, fName):
+    def get_headers(self, fName, delim):
         with open(fName,'rU+') as f:
             headers = f.readline()
-        headers = headers.split(',')
+        headers = headers.split(delim)
         headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
 #        print headers
         return headers 
