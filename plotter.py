@@ -3,6 +3,7 @@ import os
 import sys
 import csv
 import time
+import pickle
 import logging
 import pandas as pd
 import numpy as np
@@ -28,7 +29,6 @@ def main():
     plotter = PyPlotter()
     plotter.run()
     sys.exit(0)
-        
     
 class toPlot():
     # These values will be calculated when GUI boots up by plotter.py
@@ -69,6 +69,7 @@ class PyPlotter():
         self.pltr = toPlot()
         self.input_dir = os.path.join(pwd, 'input')
         self.output_dir = os.path.join(pwd, 'output')
+        self.work_dir = os.path.join(pwd, 'workdir')
         self.err_dir = os.path.join(pwd, 'error_logs')
         self.err_file = os.path.join(self.err_dir, '%s.err' % timestr)
           
@@ -94,7 +95,7 @@ class PyPlotter():
             self.choose_headers(file)
             self.get_labels(file)
             self.get_delimiter(file)
-            self.get_type(file)
+            # self.get_type(file)
             self.get_interval(file)
             self.get_parser(file)
             self.parse_logs(file)
@@ -117,12 +118,12 @@ class PyPlotter():
         error += "or press 'q' to quit.\n"    
         self.get_input(file, menu, error, DELIMS, 'get_delimiter') 
     
-    def get_type(self, file):
-        menu = ["Select graph type for %s\n" % file]
-        error = "Sorry, %s, is not a valid option\n" 
-        error += "Enter the number of the graph type you want,\n"   
-        error += "or press 'q' to quit.\n" 
-        self.get_input(file, menu, error, GRAPH_TYPE, 'get_type')    
+    # def get_type(self, file):
+        # menu = ["Select graph type for %s\n" % file]
+        # error = "Sorry, %s, is not a valid option\n" 
+        # error += "Enter the number of the graph type you want,\n"   
+        # error += "or press 'q' to quit.\n" 
+        # self.get_input(file, menu, error, GRAPH_TYPE, 'get_type')    
     
     def get_interval(self, file):
         menu = ["Select the time interval between the rows in %s\n" % file]
@@ -155,7 +156,7 @@ class PyPlotter():
                 self.pltr.graph_options['title'] = user_input
     
     def get_input(self, file, menu, error, special = None, func = None):
-        msg = "(%s) %s\n"
+        msg = "(%s) %s"
         choice = 0 #len(menu)
         opt_count = 0
         while choice < len(menu): #> 0:
@@ -189,8 +190,8 @@ class PyPlotter():
                     print 'You chose #%d %s\n' % (count, special[count-1])
                     if func == 'get_delimiter':
                         self.pltr.delimiter = special[count-1]
-                    elif func == 'get_type':
-                        self.pltr.graph_options['type'] = special[count-1]                        
+                    # elif func == 'get_type':
+                        # self.pltr.graph_options['type'] = special[count-1]                        
                     elif func == 'get_interval':
                         self.pltr.interval_bxn_rows = special[count-1]                       
                     elif func == 'get_parser':
@@ -198,6 +199,7 @@ class PyPlotter():
                     elif func == 'choose_headers':
                         if opt_count == 1:
                             self.pltr.x_axis = special[count-1].strip()
+                            self.pltr.headers.remove(self.pltr.x_axis)
                         else:
                             self.pltr.y_axis.append(special[count-1].strip())
                             cont = 1
@@ -467,10 +469,11 @@ class PyPlotter():
         delim = self.pltr.delimiter
         for file in file_list:
             if file.endswith(delim.lower()):
-                file = os.path.join(log_dir, file)
-                self.plot_it(file)
+                fName = file
+                file_path = os.path.join(log_dir, file)
+                self.plot_it(file_path, fName)
      
-    def plot_it(self, file):
+    def plot_it(self, file, fName):
         plotFile = file.replace('.csv','.png')
         #Plots graph based on x and y axis inputs
         #First col of the file has to be date/time for now
@@ -494,13 +497,7 @@ class PyPlotter():
                 to_plot.append(self.pltr.y_axis[count])
             plot_it = df[to_plot]
         
-        if self.pltr.graph_options['type'] == 'line':
-            plot_fig = plot_it.plot.line(stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'], x=self.pltr.x_axis, alpha=0.7)
-        elif self.pltr.graph_options['type'] == 'scatter':
-            pass # plot_fig = plot_it.plot.scatter(x=self.pltr.x_axis, y=self.pltr.y_axis, stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'],  alpha=0.7)
-        elif self.pltr.graph_options['type'] == 'bar':
-            pass # plot_fig = plot_it.plot(kind='bar', x=self.pltr.x_axis, y=self.pltr.y_axis, stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'],alpha=0.7)
-        
+        plot_fig = plot_it.plot.line(stacked=self.pltr.graph_options['stacked'], title=self.pltr.graph_options['title'], x=self.pltr.x_axis, alpha=0.7)
         plot_fig.get_yaxis().get_major_formatter().set_scientific(True)
         
         # Shrink current axis's height by 10% on the bottom
@@ -519,6 +516,10 @@ class PyPlotter():
         fig.tight_layout(pad=3)
         fig.subplots_adjust(bottom=0.25)
         fig.savefig(plotFile)
+        ax = plt.subplot(111)
+        plotPkl = os.path.join(self.work_dir,fName.replace('.csv','.pkl'))
+        with open(plotPkl, 'wb') as fd:
+            pickle.dump(ax, fd)
         plt.close(fig)
         del df
         
