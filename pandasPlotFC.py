@@ -15,6 +15,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.checkbox import CheckBox
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -32,6 +33,8 @@ class GraphSession(Widget):
     prompt_for_y_axis = "Please select the column of data you wish to use for your graph's y-axis."
     x_axis = StringProperty('')
     y_axis = StringProperty('')
+    delim = StringProperty('')
+    filename = StringProperty('')
 
     def __init__(self):
         self.cur_axis = ''
@@ -40,12 +43,12 @@ class GraphSession(Widget):
         self.filename = ''
         self.x_axis = ''
         self.y_axis = ''
+        self.delim = ''
         self.path = self.cwd + "\input"
         self.plotter = PyPlotter()
         super(GraphSession, self).__init__()
 
     def assign_header(self, btn):
-        print "Inside assign_header"
         btn.color = [.3, .9, .5, 1]
         buttons = self.headerButtons.children[:]
         for x in buttons:
@@ -119,6 +122,8 @@ class GraphSession(Widget):
         if (data_needed == 'file'):
             contents_needed = self.filename
             input_is_missing_msg = self.prompt_for_filename
+        elif (data_needed == 'delim'):
+            contents_needed = self.delim
         elif (data_needed == 'x'):
             contents_needed = self.x_axis
             input_is_missing_msg = self.prompt_for_x_axis
@@ -130,6 +135,8 @@ class GraphSession(Widget):
 
         if (contents_needed != ''):
             if (data_needed == 'file'):
+                self.ids.sm.current = 'screenDelim'
+            elif (data_needed == 'delim'):
                 self.headers = self.plotter.get_headers(self.filename)
                 self.header_choices(next_axis)
                 label_to_appear.text = ''
@@ -160,6 +167,7 @@ class GraphSession(Widget):
         self.filename = ''
         self.x_axis = ''
         self.y_axis = ''
+        self.delim = ''
 
 
     def create_graph(self, buttonClicked):  
@@ -204,6 +212,23 @@ class GraphSession(Widget):
     def readFile(self, df):
         return pd.read_csv(self.filename, skipinitialspace=True, index_col=False, encoding="utf-8-sig")
     
+    def recordDelimiterChoice(self, grid):
+#  Thanks to https://stackoverflow.com/questions/610883
+#        print grid
+        for x in grid:
+            try:
+#                print x.active
+#                print x.group
+                if x.active:
+#                    print x.name
+                    self.delim = x.name
+            except AttributeError:
+                pass
+        print 'The delimiter right now is ' + self.delim
+        self.headers = self.plotter.get_headers(self.filename, self.delim)
+        self.header_choices('x')
+
+
 class GraphApp(App):
     def build(self):
         session = GraphSession()
