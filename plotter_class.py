@@ -269,12 +269,13 @@ class PyPlotter():
         headers = headers.split(delim)
         headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
         headers = [x.strip() for x in headers if len(x.strip()) > 0]
-#        print headers
+        print headers
         return headers 
         
-    def normalizeCSV(self, file):   
+    def normalizeCSV(self, file, delim):   
         fName = os.path.basename(file)   
-        fName = fName.split('.')[0]
+#        fName = fName.split('.')[0]
+        fName, fExtension = fName.split('.')
         try:
             log = csv.reader(open(file, 'rU+'))
             log = list(log)
@@ -282,10 +283,10 @@ class PyPlotter():
                 for i, x in enumerate(logFile):
                     if i == 0:
                         header = x 
-                        lng = len(header.split(','))
-                        errorStr = ',' * (lng-2)  + '\n'
+                        lng = len(header.split(delim))
+                        errorStr = delim * (lng-2)  + '\n'
                     if i == 1:  
-                        if len(log[i]) == lng:
+                        if len(x.split(delim)) == lng:
                             wFile = os.path.join(self.input_dir,'%s_CLEAN.csv' % (fName))
                             writeFile = open(wFile, 'wb+')
                             writeFile.write(header)                 
@@ -297,9 +298,8 @@ class PyPlotter():
                             writeFile.write(header)
                             writeFile.write(err)                  
                     elif i > 1:
-                        if len(log[i]) == lng:
+                        if len(x.split(delim)) == lng:
                             writeFile.write(x)
-                           
                         else:
                             err = str(log[i][0]) + errorStr
                             writeFile.write(err)
@@ -311,7 +311,7 @@ class PyPlotter():
                 os.remove(wFile)
         except Exception as e:
             print "Error normalizing %s.\n Error Message: %s" % (str(fName), str(e))
-            logging.error("Error normalizing %s.\n Error Message: %s" % (str(log_dir), str(e)))
+            logging.error("Error normalizing %s.\n Error Message: %s" % (str(self.err_dir), str(e)))
             sys.exit(1)
            
                 
@@ -335,7 +335,7 @@ class PyPlotter():
                 os.makedirs(log_dir)
             except Exception as e:
                 print "Error creating %s directory.\n Error Message: %s" % (str(log_dir), str(e))
-                logging.error("Error creating %s directory.\n Error Message: %s" % (str(log_dir), str(e)))
+                logging.error("Error creating %s directory.\n Error Message: %s" % (str(self.err_dir), str(e)))
                 sys.exit(1)
 
         if parser == 'daily':
@@ -409,7 +409,7 @@ class PyPlotter():
         
         except Exception as e:
             print "Error parsing %s.\n Error Message: %s" % (str(fName), str(e))
-            logging.error("Error parsing %s.\n Error Message: %s" % (str(log_dir), str(e)))
+            logging.error("Error parsing %s.\n Error Message: %s" % (str(self.err_dir), str(e)))
             sys.exit(1)
         
     def plot_it_preview(self, file):

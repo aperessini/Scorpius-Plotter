@@ -196,6 +196,7 @@ class GraphSession(Widget):
 #        if buttonClicked.id == 'line_graph':
         if buttonClicked.text == 'Line Graph':
             df.plot(x=[self.x_axis], y=[self.y_axis])
+            plt.show()
         elif buttonClicked.text == 'Scatter Graph':
             #x = df[self.x_axis]
             #y = df[self.y_axis]
@@ -210,7 +211,9 @@ class GraphSession(Widget):
             pass
 
     def readFile(self, df):
-        return pd.read_csv(self.filename, skipinitialspace=True, index_col=False, encoding="utf-8-sig")
+        #  This function cleans the data and puts it back in the same file
+        self.plotter.normalizeCSV(self.filename, self.delim)
+        return pd.read_csv(self.filename, skipinitialspace=True, index_col=False, encoding="utf-8-sig", sep=self.delim, parse_dates=[0])
     
     def recordDelimiterChoice(self, grid):
 #  Thanks to https://stackoverflow.com/questions/610883
