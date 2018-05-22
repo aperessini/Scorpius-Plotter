@@ -163,8 +163,24 @@ class GraphSession(Widget):
 
 
     def create_graph(self, buttonClicked):  
+        #
+        # Trying to figure out why selecting Date/Time as x-axis
+        # gives a KeyError with a scatter plot 5/21/2018
+        #
         df = self.readFile(self)
-#        print df
+        #df.columns = df.columns.str.strip()
+        print df.columns[0]
+        print df.columns.values
+        if(df.columns[0] == 'Date/Time'):
+            print 'poophead'
+        #print (df.columns.tolist())
+        #print df
+        #print self.headers
+        #df.columns = self.headers
+        #print self.x_axis
+        #if self.x_axis == 'Date/Time':
+         #   df[self.x_axis] = pd.to_datetime(df[self.x_axis])
+          #  df.set_index([self.x_axis], inplace=True)        
 
 #  I'd prefer to use the following line, but it doesn't work for
 #  some reason.  I don't know why.  So using the text attribute
@@ -172,12 +188,11 @@ class GraphSession(Widget):
 #        if buttonClicked.id == 'line_graph':
         if buttonClicked.text == 'Line Graph':
             df.plot(x=[self.x_axis], y=[self.y_axis])
-            plt.show()
         elif buttonClicked.text == 'Scatter Graph':
             #x = df[self.x_axis]
             #y = df[self.y_axis]
             #plt.scatter(x, y)
-            df.plot.scatter(x=[self.x_axis], y=[self.y_axis]) #'Date/Time' is not in index error
+            df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
             plt.show()
         elif buttonClicked.text == 'Bar Graph\n(hardcoded)':
             #  With thanks to stackoverflow 21331722
@@ -187,7 +202,7 @@ class GraphSession(Widget):
             pass
 
     def readFile(self, df):
-        return pd.read_csv(self.filename)
+        return pd.read_csv(self.filename, skipinitialspace=True, index_col=False, encoding="utf-8-sig")
     
 class GraphApp(App):
     def build(self):
