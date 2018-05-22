@@ -122,8 +122,8 @@ class GraphSession(Widget):
         if (data_needed == 'file'):
             contents_needed = self.filename
             input_is_missing_msg = self.prompt_for_filename
-        elif (data_needed == 'delim'):
-            contents_needed = self.delim
+#        elif (data_needed == 'delim'):
+#            contents_needed = self.delim
         elif (data_needed == 'x'):
             contents_needed = self.x_axis
             input_is_missing_msg = self.prompt_for_x_axis
@@ -136,10 +136,10 @@ class GraphSession(Widget):
         if (contents_needed != ''):
             if (data_needed == 'file'):
                 self.ids.sm.current = 'screenDelim'
-            elif (data_needed == 'delim'):
-                self.headers = self.plotter.get_headers(self.filename)
-                self.header_choices(next_axis)
-                label_to_appear.text = ''
+#            elif (data_needed == 'delim'):
+#                self.headers = self.plotter.get_headers(self.filename)
+#                self.header_choices(next_axis)
+#                label_to_appear.text = ''
             elif (data_needed == 'x'):
                 self.ids.sm.current = 'screenX'
                 self.popup.dismiss() 
@@ -214,17 +214,13 @@ class GraphSession(Widget):
     
     def recordDelimiterChoice(self, grid):
 #  Thanks to https://stackoverflow.com/questions/610883
-#        print grid
         for x in grid:
             try:
-#                print x.active
-#                print x.group
                 if x.active:
-#                    print x.name
                     self.delim = x.name
             except AttributeError:
                 pass
-        print 'The delimiter right now is ' + self.delim
+#        print 'The delimiter right now is ' + self.delim
         self.headers = self.plotter.get_headers(self.filename, self.delim)
         self.header_choices('x')
 
