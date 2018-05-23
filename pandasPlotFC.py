@@ -35,6 +35,9 @@ class GraphSession(Widget):
     y_axis = StringProperty('')
     delim = StringProperty('')
     filename = StringProperty('')
+    graph_title = StringProperty('')
+    x_axis_title = StringProperty('')
+    y_axis_title = StringProperty('')
 
     def __init__(self):
         self.cur_axis = ''
@@ -195,7 +198,10 @@ class GraphSession(Widget):
 #  instead seems to be a workaround that functions.
 #        if buttonClicked.id == 'line_graph':
         if buttonClicked.text == 'Line Graph':
-            df.plot(x=[self.x_axis], y=[self.y_axis])
+            #  Thanks to https://stackoverflow.com/questions/21487329/
+            #  for the following code to set titles
+            graph = df.plot(x=[self.x_axis], y=[self.y_axis], title=self.graph_title)
+            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title)
             plt.show()
         elif buttonClicked.text == 'Scatter Graph':
             #x = df[self.x_axis]
@@ -248,6 +254,23 @@ class GraphSession(Widget):
                         item.active = False
                 except AttributeError:
                     pass
+
+    def recordTitles(self, gridChildren):
+        for item in gridChildren:
+            try:
+                if item.text == '':
+                    item.text = item.hint_text
+                if item.name == 'graph title':
+                    self.graph_title = item.text
+                elif item.name == 'x axis title':
+                    self.x_axis_title = item.text
+                elif item.name == 'y axis title':
+                    self.y_axis_title = item.text
+                else:
+                    print 'Weird!!!'
+            except AttributeError:
+                pass
+        self.ids.sm.current = 'screen3'
 
 class GraphApp(App):
     def build(self):

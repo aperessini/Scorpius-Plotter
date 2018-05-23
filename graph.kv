@@ -218,7 +218,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.print_axis('y'); sm.current = 'screen3'
+                            on_press:       root.print_axis('y'); sm.current = 'textEnterScreen'
                             text:           'Next' 
                         Button:
                             id:             change_y_axis
@@ -236,6 +236,63 @@
                             on_press:       root.header_choices('x') #sm.current = 'screen1'
                             text:           'Change X-Axis \nSelection'
                             halign:         'center'
+
+            Screen:
+                size:       blayout.size
+                pos:        blayout.pos
+                name:       'textEnterScreen'
+                Popup:
+                    id:         textEnterPopup
+                    size:       self.parent.size
+                    pos:        self.parent.pos
+                    title:      'Enter graph title and axes titles'
+                    FloatLayout:
+                        GridLayout:
+                            size_hint_x:    0.8
+                            size_hint_y:    0.6
+                            pos_hint:       {'x': 0.15, 'y': 0.25}
+                            cols:           2
+                            Label:
+                                text:       'Graph title'
+                                size_hint_y: None
+                                size_hint_x:    0.25
+                                height:     30
+                            TextInput:
+                                name:       'graph title'
+                                hint_text:       root.y_axis + ' versus ' + root.x_axis
+                                size_hint_y: None
+                                size_hint_x:    0.75
+                                height:     30
+                            Label:
+                                text:       'x-axis title'
+                                size_hint_y: None
+                                size_hint_x:    0.25
+                                height:     30
+                            TextInput:
+                                name:       'x axis title'
+                                hint_text:       root.x_axis
+                                size_hint_y: None
+                                size_hint_x:    0.75
+                                height:     30
+                            Label:
+                                text:       'y-axis title'
+                                size_hint_y: None
+                                size_hint_x:    0.25
+                                height:     30
+                            TextInput:
+                                name:       'y axis title'
+                                hint_text:       root.y_axis
+                                size_hint_y: None
+                                size_hint_x:    0.75
+                                height:     30
+                        Button:
+                            id:             next_screen
+                            size_hint_y:    0.15
+                            size_hint_x:    0.2
+                            pos_hint:       {'x': 0.79, 'y': 0.01}
+                            on_press:       root.recordTitles(self.parent.children[1].children)
+#                            on_press:       sm.current = 'screen3'
+                            text:           'Next' 
 
             Screen:
                 size:       blayout.size
