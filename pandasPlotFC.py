@@ -228,6 +228,27 @@ class GraphSession(Widget):
         self.header_choices('x')
 
 
+    def activateDefaultDelimiter(self, radioButtons):
+        _, fileExtension = self.filename.split('.')
+        if (fileExtension.upper() == 'CSV'):
+            for item in radioButtons:
+                try:
+                    if item.name == ',':
+                        item.active = True
+                    else:
+                        item.active = False
+                except AttributeError:
+                    pass
+        else:
+            for item in radioButtons:
+                try:
+                    if item.name == '\t':
+                        item.active = True
+                    else:
+                        item.active = False
+                except AttributeError:
+                    pass
+
 class GraphApp(App):
     def build(self):
         session = GraphSession()

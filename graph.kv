@@ -86,7 +86,8 @@
                 pos:    blayout.pos
                 name:   'screenDelim'
                 id:     delim_screen     
-#                on_enter:   print root.filename
+#  The line below sends the contents of the grid layout
+                on_enter:   root.activateDefaultDelimiter(self.children[0].children[0].children[0].children[0].children[1].children[1].children)  
                 Popup:
                     id:         delim_popup
                     size:       self.parent.size
@@ -110,10 +111,8 @@
                                 cols:           2
                                 size_hint_x:     0.5
                                 CheckBox:
-                                    active:         True
+                                    active:         False
                                     name:           '\t'
-        #  Note for future improvement:  read the file extension and if it is a .csv file, default so that
-        #  the comma delimiter is checked instead of the tab.
                                     group:          'delimiters'
                                 Label:
                                     text:           'Tab'
@@ -121,6 +120,7 @@
                                     halign:         'left'
                                     valign:         'middle'
                                 CheckBox:
+                                    active:         False
                                     name:            ','
                                     group:          'delimiters'
                                 Label:
@@ -129,6 +129,7 @@
                                     halign:         'left'
                                     valign:         'middle'
                                 CheckBox:
+                                    active:         False
                                     name:             ';'
                                     group:          'delimiters'
                                 Label:
@@ -137,6 +138,7 @@
                                     halign:         'left'
                                     valign:         'middle'
                                 CheckBox:
+                                    active:         False
                                     name:            ' '
                                     group:          'delimiters'
                                 Label:
