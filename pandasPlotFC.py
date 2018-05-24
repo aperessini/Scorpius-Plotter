@@ -16,11 +16,15 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.checkbox import CheckBox
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
 import sys
+import pdb
+import difflib
+import datetime
 from plotter_class import PyPlotter
 
 class GraphSession(Widget):
@@ -58,12 +62,12 @@ class GraphSession(Widget):
             if x != btn:
                 x.color = [0, 0, 0, 1]
         if self.cur_axis == 'x':
-            self.x_axis = btn.text
-            print self.x_axis
+            self.x_axis = btn.text.encode('ascii')
+            #print self.x_axis
             self.ids.sm.current = 'screenX'
         elif self.cur_axis == 'y':
-            self.y_axis = btn.text
-            print self.y_axis
+            self.y_axis = btn.text.encode('ascii')
+            #print self.y_axis
             self.ids.sm.current = 'screenY'
 
     def header_choices(self, axis):
@@ -179,19 +183,26 @@ class GraphSession(Widget):
         # gives a KeyError with a scatter plot 5/21/2018
         #
         df = self.readFile(self)
-        #df.columns = df.columns.str.strip()
-        print df.columns[0]
-        print df.columns.values
-        if(df.columns[0] == 'Date/Time'):
-            print 'poophead'
-        #print (df.columns.tolist())
-        #print df
-        #print self.headers
-        #df.columns = self.headers
-        #print self.x_axis
-        #if self.x_axis == 'Date/Time':
-         #   df[self.x_axis] = pd.to_datetime(df[self.x_axis])
-          #  df.set_index([self.x_axis], inplace=True)        
+        print df.iloc[:,0].name
+        print df.iloc[:,0]
+
+        # THANK YOU : https://stackoverflow.com/questions/15891038/change-data-type-of-columns-in-pandas
+        for x in df.columns:
+            if df[x].dtype != 'datetime64[ns]':
+                df[x] = pd.to_numeric(df[x], errors='ignore') 
+            else:
+                for y in df[x]:
+                    #print y
+                    y = y.to_pydatetime() 
+                    #print type(y)
+
+        #df = df.apply(pd.to_numeric, errors='ignore')
+        #pdb.set_trace()
+        
+        #if(df.columns[0] == self.x_axis):
+        #    print 'poophead'
+        
+                
 
 #  I'd prefer to use the following line, but it doesn't work for
 #  some reason.  I don't know why.  So using the text attribute
@@ -207,6 +218,8 @@ class GraphSession(Widget):
             #x = df[self.x_axis]
             #y = df[self.y_axis]
             #plt.scatter(x, y)
+            
+            #Still does not work for datetime object; researching workarounds 5/23/2018; See: https://github.com/pandas-dev/pandas/issues/8113
             df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
             plt.show()
         elif buttonClicked.text == 'Bar Graph\n(hardcoded)':
@@ -219,7 +232,7 @@ class GraphSession(Widget):
     def readFile(self, df):
         #  This function cleans the data and puts it back in the same file
         self.plotter.normalizeCSV(self.filename, self.delim)
-        return pd.read_csv(self.filename, skipinitialspace=True, index_col=False, encoding="utf-8-sig", sep=self.delim, parse_dates=[0])
+        return pd.read_csv(self.filename, names=self.headers, header=0, skipinitialspace=True, index_col=False, usecols=range(0, len(self.headers)), sep=self.delim, parse_dates=[0])
     
     def recordDelimiterChoice(self, grid):
 #  Thanks to https://stackoverflow.com/questions/610883
@@ -274,6 +287,7 @@ class GraphSession(Widget):
 
 class GraphApp(App):
     def build(self):
+        print matplotlib.__version__
         session = GraphSession()
         return session
 

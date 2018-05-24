@@ -177,7 +177,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.print_axis('x'); root.header_choices('y')
+                            on_press:       root.header_choices('y')
                             text:           'Next' 
                         Button:
                             id:             change_x_axis
@@ -218,7 +218,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.print_axis('y'); sm.current = 'textEnterScreen'
+                            on_press:       sm.current = 'textEnterScreen'
                             text:           'Next' 
                         Button:
                             id:             change_y_axis
