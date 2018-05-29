@@ -287,6 +287,8 @@ class GraphSession(Widget):
 
 class GraphApp(App):
     def build(self):
+        self.icon = 'scorpion.png'
+        self.title = 'Scorpius Plotter'
         print matplotlib.__version__
         session = GraphSession()
         return session
