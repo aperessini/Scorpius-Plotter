@@ -220,7 +220,8 @@ class GraphSession(Widget):
             #plt.scatter(x, y)
             
             #Still does not work for datetime object; researching workarounds 5/23/2018; See: https://github.com/pandas-dev/pandas/issues/8113
-            df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
+            graph = df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
+            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
             plt.show()
         elif buttonClicked.text == 'Bar Graph\n(hardcoded)':
             #  With thanks to stackoverflow 21331722
