@@ -204,30 +204,20 @@ class GraphSession(Widget):
         
                 
 
-#  I'd prefer to use the following line, but it doesn't work for
-#  some reason.  I don't know why.  So using the text attribute
-#  instead seems to be a workaround that functions.
-#        if buttonClicked.id == 'line_graph':
-        if buttonClicked.text == 'Line Graph':
+        if buttonClicked == self.ids.line_graph:
             #  Thanks to https://stackoverflow.com/questions/21487329/
             #  for the following code to set titles
             graph = df.plot(x=[self.x_axis], y=[self.y_axis])
-#            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title)
-#            plt.show()
-        elif buttonClicked.text == 'Scatter Graph':
-            #x = df[self.x_axis]
-            #y = df[self.y_axis]
-            #plt.scatter(x, y)
-            
+        
+        elif buttonClicked == self.ids.scatter_button:
             #Still does not work for datetime object; researching workarounds 5/23/2018; See: https://github.com/pandas-dev/pandas/issues/8113
             graph = df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
-#            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
-#            plt.show()
-        elif buttonClicked.text == 'Bar Graph\n(hardcoded)':
+        
+        elif buttonClicked == self.ids.bar_button:
             #  With thanks to stackoverflow 21331722
 #            df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')  #self.x_axis 
             graph = df.plot.bar(x=self.x_axis, y=self.y_axis)
-#            plt.show()
+
         else:
             pass
         graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
