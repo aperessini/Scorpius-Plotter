@@ -83,20 +83,20 @@ class GraphSession(Widget):
         self.cur_axis = axis
 
         #  This will hold all the other elements
-        chooseAxisScreen = FloatLayout()
+        self.chooseAxisScreen = FloatLayout()
 
         #  Inside of the float layout, we'll have a grid layout
         self.headerButtons = GridLayout(
                 cols=2, size_hint_y=0.7, size_hint_x=0.9, 
                 pos_hint={'x': 0.05, 'top': 0.9})
-        chooseAxisScreen.add_widget(self.headerButtons)
+        self.chooseAxisScreen.add_widget(self.headerButtons)
 
         #  and a label which appears when the user doesn't make a selection
-        axis_missing = Label(
+        self.axis_missing = Label(
                 color = (1.0, .27, 0.0, 1.0), 
                 pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
                 size_hint_x = 0.5)
-        chooseAxisScreen.add_widget(axis_missing)
+        self.chooseAxisScreen.add_widget(self.axis_missing)
 
         
         #  and a label which appears when the user selects a non-numeric
@@ -105,15 +105,15 @@ class GraphSession(Widget):
                 color = (1.0, .27, 0.0, 1.0), 
                 pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
                 size_hint_x = 0.5)
-        chooseAxisScreen.add_widget(self.non_numeric_axis)
+        self.chooseAxisScreen.add_widget(self.non_numeric_axis)
 
         #  Set arguments for the Next button on_press
         if (axis == 'x'):
-            data_needed = 'x'
-            next_axis = 'y'
+            self.data_needed = 'x'
+            self.next_axis = 'y'
         elif (axis == 'y'):
-            data_needed = 'y'
-            next_axis = None
+            self.data_needed = 'y'
+            self.next_axis = None
 
         #  and a "Next" button
         #  Thanks to https://stackoverflow.com/questions/12368390
@@ -128,15 +128,15 @@ class GraphSession(Widget):
                 text = 'Next', size_hint_y=0.15, size_hint_x=0.2, 
                 pos_hint={'x': 0.79, 'y': 0.01}, 
                 on_press = lambda _: self.ensureInput(
-                    data_needed, axis_missing, next_axis))
-        chooseAxisScreen.add_widget(nextButton)
+                    self.data_needed, self.axis_missing, self.next_axis))
+        self.chooseAxisScreen.add_widget(nextButton)
 
 #        print self.headers
         for header in self.headers:
             btn = Button(text=header)
             btn.bind(on_press=self.assign_header)   
             self.headerButtons.add_widget(btn)
-        content = chooseAxisScreen
+        content = self.chooseAxisScreen
         title = 'Select your ' + self.cur_axis + '-axis'
         self.popup = Popup(content=content, title=title, size_hint=(1.0, 1.0))
         self.popup.open()
@@ -193,13 +193,15 @@ class GraphSession(Widget):
         # Trying to figure out why selecting Date/Time as x-axis
         # gives a KeyError with a scatter plot 5/21/2018
         #
-        df = self.readFile(self)
+        self.readFile()
+        df = self.df
         print df.iloc[:,0].name
         print df.iloc[:,0]
 
         # THANK YOU : https://stackoverflow.com/questions/15891038/change-data-type-of-columns-in-pandas
         for x in df.columns:
             if df[x].dtype != 'datetime64[ns]':
+                #print df[x].dtype
                 df[x] = pd.to_numeric(df[x], errors='ignore') 
             else:
                 for y in df[x]:
@@ -234,10 +236,10 @@ class GraphSession(Widget):
         graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
         plt.show()
 
-    def readFile(self, df):
+    def readFile(self):
         #  This function cleans the data and puts it back in the same file
         self.plotter.normalizeCSV(self.filename, self.delim)
-        return pd.read_csv(self.filename, names=self.headers, header=0, skipinitialspace=True, index_col=False, usecols=range(0, len(self.headers)), sep=self.delim, parse_dates=[0])
+        self.df = pd.read_csv(self.filename, names=self.headers, header=0, skipinitialspace=True, index_col=False, usecols=range(0, len(self.headers)), sep=self.delim, parse_dates=[0])
     
     def recordDelimiterChoice(self, grid):
 #  Thanks to https://stackoverflow.com/questions/610883
@@ -272,6 +274,16 @@ class GraphSession(Widget):
                         item.active = False
                 except AttributeError:
                     pass
+
+    def updateTextScreen(self):
+        graph_hint = self.y_axis + ' versus ' + self.x_axis
+        self.ids.gTitle.text = str(graph_hint)
+        self.ids.gTitle.hint_text = str(graph_hint)
+        self.ids.xTitle.text = str(self.x_axis)
+        self.ids.xTitle.hint_text = str(self.x_axis)
+        self.ids.yTitle.text = str(self.y_axis)
+        self.ids.yTitle.hint_text = str(self.y_axis)
+
 
     def recordTitles(self, gridChildren):
         for item in gridChildren:

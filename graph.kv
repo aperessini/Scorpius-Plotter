@@ -5,6 +5,7 @@
 #  Team:  Scorpius
 #  Team members:  John Carrabino, Aaron Peressini, Cheryl Freeman
 
+
 <GraphSession>:
     BoxLayout:
         id:             blayout
@@ -46,7 +47,7 @@
                 pos:    blayout.pos
                 name:   'screen1'
                 id:     file_screen
-                on_enter:       root.clear_previous_selections()
+                #on_enter:       root.clear_previous_selections()
                 Popup:
                     id:         file_popup
                     size:       self.parent.size
@@ -64,7 +65,7 @@
                         FileChooserIconView:
                             id:             file_chooser
                             path:           root.path
-                            on_selection:   root.filename = self.selection[0]
+                            on_selection:   root.clear_previous_selections();root.filename = self.selection[0];print root.filename
                         Button:
                             id:             next_screen
                             size_hint_y:    0.15
@@ -218,7 +219,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       sm.current = 'textEnterScreen'
+                            on_press:       root.updateTextScreen();sm.current = 'textEnterScreen';print root.x_axis; print root.y_axis
                             text:           'Next' 
                         Button:
                             id:             change_y_axis
@@ -259,7 +260,8 @@
                                 height:     30
                             TextInput:
                                 name:       'graph title'
-                                hint_text:       root.y_axis + ' versus ' + root.x_axis
+                                id: gTitle
+                                #hint_text:       root.y_axis + ' versus ' + root.x_axis
                                 size_hint_y: None
                                 size_hint_x:    0.75
                                 height:     30
@@ -270,7 +272,8 @@
                                 height:     30
                             TextInput:
                                 name:       'x axis title'
-                                hint_text:       root.x_axis
+                                id: xTitle
+                                #hint_text:       root.x_axis
                                 size_hint_y: None
                                 size_hint_x:    0.75
                                 height:     30
@@ -281,7 +284,8 @@
                                 height:     30
                             TextInput:
                                 name:       'y axis title'
-                                hint_text:       root.y_axis
+                                id: yTitle
+                                #hint_text:       root.y_axis
                                 size_hint_y: None
                                 size_hint_x:    0.75
                                 height:     30
@@ -290,7 +294,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.recordTitles(self.parent.children[1].children)
+                            on_press:       textEnterPopup.dismiss(); root.recordTitles(self.parent.children[1].children)
 #                            on_press:       sm.current = 'screen3'
                             text:           'Next' 
 
