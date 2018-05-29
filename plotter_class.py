@@ -266,11 +266,18 @@ class PyPlotter():
     def get_headers(self, fName, delim):
         with open(fName,'rU+') as f:
             headers = f.readline()
+            #  The lines below:  if parse_dates is not specified as column 0,
+            #  and index_col is set to False, then it will import the first column
+            #  as a data column.
+#            df = pd.read_csv(f, sep=delim, index_col=False)
+#            sdfdf = pd.read_csv(f, sep=delim, parse_dates=[0], index_col=False)
         headers = headers.split(delim)
-        headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
-        headers = [x.strip() for x in headers if len(x.strip()) > 0]
-        print headers
-        return headers 
+#  Note:  commenting out the following 2 lines.  They work fine, but I want
+#  the headers to reflect the actual headers that are in the data file, not
+#  the stripped version.
+#        headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
+#        headers = [x.strip() for x in headers if len(x.strip()) > 0]
+        return headers
         
     def normalizeCSV(self, file, delim):   
         fName = os.path.basename(file)   

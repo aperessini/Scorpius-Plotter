@@ -56,13 +56,21 @@ class GraphSession(Widget):
         super(GraphSession, self).__init__()
 
     def assign_header(self, btn):
+        with open(self.filename, 'rU+') as f:
+            df = pd.read_csv(f, sep=self.delim, index_col=False)
         btn.color = [.3, .9, .5, 1]
+        non_numeric_label = self.non_numeric_axis
         buttons = self.headerButtons.children[:]
         for x in buttons:
             if x != btn:
                 x.color = [0, 0, 0, 1]
         if self.cur_axis == 'x':
             self.x_axis = btn.text.encode('ascii')
+#            print df[self.x_axis].dtype
+            if df[self.x_axis].dtype == 'object':
+                non_numeric_label.text = 'This is a non-numeric data column'
+            else:
+                non_numeric_label.text = ''
             #print self.x_axis
             self.ids.sm.current = 'screenX'
         elif self.cur_axis == 'y':
@@ -89,6 +97,15 @@ class GraphSession(Widget):
                 pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
                 size_hint_x = 0.5)
         chooseAxisScreen.add_widget(axis_missing)
+
+        
+        #  and a label which appears when the user selects a non-numeric
+        #  axis
+        self.non_numeric_axis = Label(
+                color = (1.0, .27, 0.0, 1.0), 
+                pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
+                size_hint_x = 0.5)
+        chooseAxisScreen.add_widget(self.non_numeric_axis)
 
         #  Set arguments for the Next button on_press
         if (axis == 'x'):
@@ -129,8 +146,6 @@ class GraphSession(Widget):
         if (data_needed == 'file'):
             contents_needed = self.filename
             input_is_missing_msg = self.prompt_for_filename
-#        elif (data_needed == 'delim'):
-#            contents_needed = self.delim
         elif (data_needed == 'x'):
             contents_needed = self.x_axis
             input_is_missing_msg = self.prompt_for_x_axis
@@ -143,10 +158,6 @@ class GraphSession(Widget):
         if (contents_needed != ''):
             if (data_needed == 'file'):
                 self.ids.sm.current = 'screenDelim'
-#            elif (data_needed == 'delim'):
-#                self.headers = self.plotter.get_headers(self.filename)
-#                self.header_choices(next_axis)
-#                label_to_appear.text = ''
             elif (data_needed == 'x'):
                 self.ids.sm.current = 'screenX'
                 self.popup.dismiss() 
