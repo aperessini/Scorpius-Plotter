@@ -211,9 +211,9 @@ class GraphSession(Widget):
         if buttonClicked.text == 'Line Graph':
             #  Thanks to https://stackoverflow.com/questions/21487329/
             #  for the following code to set titles
-            graph = df.plot(x=[self.x_axis], y=[self.y_axis], title=self.graph_title)
-            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title)
-            plt.show()
+            graph = df.plot(x=[self.x_axis], y=[self.y_axis])
+#            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title)
+#            plt.show()
         elif buttonClicked.text == 'Scatter Graph':
             #x = df[self.x_axis]
             #y = df[self.y_axis]
@@ -221,14 +221,17 @@ class GraphSession(Widget):
             
             #Still does not work for datetime object; researching workarounds 5/23/2018; See: https://github.com/pandas-dev/pandas/issues/8113
             graph = df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
-            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
-            plt.show()
+#            graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
+#            plt.show()
         elif buttonClicked.text == 'Bar Graph\n(hardcoded)':
             #  With thanks to stackoverflow 21331722
-            df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')  #self.x_axis 
-            plt.show()
+#            df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')  #self.x_axis 
+            graph = df.plot.bar(x=self.x_axis, y=self.y_axis)
+#            plt.show()
         else:
             pass
+        graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
+        plt.show()
 
     def readFile(self, df):
         #  This function cleans the data and puts it back in the same file
