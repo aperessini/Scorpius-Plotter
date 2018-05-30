@@ -238,7 +238,7 @@ class GraphSession(Widget):
 
     def readFile(self):
         #  This function cleans the data and puts it back in the same file
-        self.plotter.normalizeCSV(self.filename, self.delim)
+#        self.plotter.normalizeCSV(self.filename, self.delim)
         self.df = pd.read_csv(self.filename, names=self.headers, header=0, skipinitialspace=True, index_col=False, usecols=range(0, len(self.headers)), sep=self.delim, parse_dates=[0])
     
     def recordDelimiterChoice(self, grid):
@@ -250,6 +250,8 @@ class GraphSession(Widget):
             except AttributeError:
                 pass
 #        print 'The delimiter right now is ' + self.delim
+        #  This function cleans the data and puts it back in the same file
+        self.plotter.normalizeCSV(self.filename, self.delim)
         self.headers = self.plotter.get_headers(self.filename, self.delim)
         self.header_choices('x')
 
@@ -277,11 +279,11 @@ class GraphSession(Widget):
 
     def updateTextScreen(self):
         graph_hint = self.y_axis + ' versus ' + self.x_axis
-        self.ids.gTitle.text = str(graph_hint)
+        self.ids.gTitle.text = ''
         self.ids.gTitle.hint_text = str(graph_hint)
-        self.ids.xTitle.text = str(self.x_axis)
+        self.ids.xTitle.text = ''
         self.ids.xTitle.hint_text = str(self.x_axis)
-        self.ids.yTitle.text = str(self.y_axis)
+        self.ids.yTitle.text = ''
         self.ids.yTitle.hint_text = str(self.y_axis)
 
 

@@ -219,14 +219,15 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-                            on_press:       root.updateTextScreen();sm.current = 'textEnterScreen';print root.x_axis; print root.y_axis
+#                            on_press:       root.updateTextScreen();sm.current = 'textEnterScreen';print root.x_axis; print root.y_axis
+                            on_press:       sm.current = 'textEnterScreen'
                             text:           'Next' 
                         Button:
                             id:             change_y_axis
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.45, 'y': 0.25}
-                            on_press:       root.header_choices('y')
+                            on_press:       root.y_axis = ''; root.header_choices('y')
                             text:           'Change Y-Axis \nSelection'
                             halign:         'center'
                         Button:
@@ -234,7 +235,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.2, 'y': 0.25}
-                            on_press:       root.header_choices('x') #sm.current = 'screen1'
+                            on_press:       root.x_axis = ''; root.header_choices('x') #sm.current = 'screen1'
                             text:           'Change X-Axis \nSelection'
                             halign:         'center'
 
@@ -242,6 +243,7 @@
                 size:       blayout.size
                 pos:        blayout.pos
                 name:       'textEnterScreen'
+                on_enter:   root.updateTextScreen()
                 Popup:
                     id:         textEnterPopup
                     size:       self.parent.size
@@ -341,7 +343,7 @@
                         size_hint_y:    0.15
                         size_hint_x:    0.2
                         pos_hint:       {'x': 0.25, 'y': 0.1}
-                        on_press:       root.header_choices('x') #sm.current = 'screen1'
+                        on_press:       root.x_axis = ''; root.y_axis=''; root.header_choices('x') #sm.current = 'screen1'
                         text:           'Change Headers'
                     Button:
                         id:             change_file
