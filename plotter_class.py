@@ -272,10 +272,10 @@ class PyPlotter():
 #            df = pd.read_csv(f, sep=delim, index_col=False)
 #            sdfdf = pd.read_csv(f, sep=delim, parse_dates=[0], index_col=False)
         headers = headers.split(delim)
-#  Note:  commenting out the following 2 lines.  They work fine, but I want
+#  Note:  commenting out the stripping of the white space.  It works fine, but we want
 #  the headers to reflect the actual headers that are in the data file, not
-#  the stripped version.
-#        headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
+#  the stripped version.  The stripping of UTF stuff needs to happen.
+        headers = [x.strip('\xef\xbb\xbf') for x in headers if len(x.strip()) > 0]
 #        headers = [x.strip() for x in headers if len(x.strip()) > 0]
         return headers
         
