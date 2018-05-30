@@ -136,9 +136,15 @@ class GraphSession(Widget):
                     self.data_needed, self.axis_missing, self.next_axis))
         self.chooseAxisScreen.add_widget(nextButton)
 
+        with open(self.filename, 'rU+') as f:
+            df = pd.read_csv(f, sep=self.delim, index_col=False)
+
 #        print self.headers
         for header in self.headers:
             btn = Button(text=header)
+            if self.cur_axis == 'y':
+                if df[header].dtype == 'object':
+                    btn.disabled = True
             btn.bind(on_press=self.assign_header)   
             self.headerButtons.add_widget(btn)
         content = self.chooseAxisScreen
