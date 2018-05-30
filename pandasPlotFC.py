@@ -35,6 +35,7 @@ class GraphSession(Widget):
     prompt_for_filename = "Please select the file containing the data you wish to graph."
     prompt_for_x_axis = "Please select the column of data you wish to use for your graph's x-axis."
     prompt_for_y_axis = "Please select the column of data you wish to use for your graph's y-axis."
+    disabled_explanation = "A scatter graph will not work with your non-numeric x-axis values."
     x_axis = StringProperty('')
     y_axis = StringProperty('')
     delim = StringProperty('')
@@ -69,8 +70,12 @@ class GraphSession(Widget):
 #            print df[self.x_axis].dtype
             if df[self.x_axis].dtype == 'object':
                 non_numeric_label.text = 'This is a non-numeric data column'
+                self.ids.scatter_button.disabled = True
+                self.ids.disabled_explanation.text = self.disabled_explanation
             else:
                 non_numeric_label.text = ''
+                self.ids.scatter_button.disabled = False
+                self.ids.disabled_explanation.text = ''
             #print self.x_axis
             self.ids.sm.current = 'screenX'
         elif self.cur_axis == 'y':
