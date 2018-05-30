@@ -286,14 +286,25 @@ class PyPlotter():
             with open(file, 'rb+') as logFile:  
                 for i, x in enumerate(logFile):
                     if i == 0:
-                        header = x 
+                        header = x
+                        headerList = header.split(delim)
+                        cleanedHeaderList = []
+                        for heading in headerList:
+                            if len(x.strip()) > 0:
+                                    heading = heading.strip('\xef\xbb\xbf')
+                                    heading = heading.lstrip()
+                                    heading = heading.rstrip()
+                                    cleanedHeaderList.append(heading)
                         lng = len(header.split(delim))
                         errorStr = delim * (lng-2)  + '\n'
                     if i == 1:  
                         if len(x.split(delim)) == lng:
                             wFile = os.path.join(self.input_dir,'%s_CLEAN.csv' % (fName))
                             writeFile = open(wFile, 'wb+')
-                            writeFile.write(header)                 
+                            #  Thanks to stackoverflow 44778
+                            cleanedHeaderString = delim.join(cleanedHeaderList)
+                            cleanedHeaderString = cleanedHeaderString + '\n'
+                            writeFile.write(cleanedHeaderString)                 
                             writeFile.write(x)
                         else:
                             err = str(log[i][0]) + errorStr
