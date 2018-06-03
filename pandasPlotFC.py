@@ -283,7 +283,8 @@ class GraphSession(Widget):
         self.header_choices('x')
 
 
-    def activateDefaultDelimiter(self, radioButtons):
+    def activateDefaultDelimiter(self):
+        radioButtons = self.ids.delimiterGrid.children
         _, fileExtension = self.filename.split('.')
         if (fileExtension.upper() == 'CSV'):
             for item in radioButtons:

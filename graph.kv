@@ -87,8 +87,7 @@
                 pos:    blayout.pos
                 name:   'screenDelim'
                 id:     delim_screen     
-#  The line below sends the contents of the grid layout
-                on_enter:   root.activateDefaultDelimiter(self.children[0].children[0].children[0].children[0].children[1].children[1].children)  
+                on_enter:   root.activateDefaultDelimiter()  
                 Popup:
                     id:         delim_popup
                     size:       self.parent.size
@@ -153,9 +152,7 @@
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-#  The last children reference is for the grid layout
                             on_press:       root.recordDelimiterChoice()
-#                            on_press:       root.recordDelimiterChoice(self.parent.children[1].children[1].children)
                             text:           'Next' 
 
 
