@@ -35,7 +35,7 @@ class GraphSession(Widget):
     prompt_for_filename = "Please select the file containing the data you wish to graph."
     prompt_for_x_axis = "Please select the column of data you wish to use for your graph's x-axis."
     prompt_for_y_axis = "Please select the column of data you wish to use for your graph's y-axis."
-    disabled_explanation = "A scatter graph will not work with your non-numeric x-axis values."
+    scatter_disabled_explanation = "A scatter graph will not work with your non-numeric x-axis values."
     y_axis_disabled_explanation = ("The plotter is only able to graph numeric value on the y-axis.  "
                                     "Non-numeric data columns are disabled.")
     x_axis = StringProperty('')
@@ -73,7 +73,7 @@ class GraphSession(Widget):
             if df[self.x_axis].dtype == 'object':
                 non_numeric_label.text = 'Note:  This is a non-numeric data column.'
                 self.ids.scatter_button.disabled = True
-                self.ids.disabled_explanation.text = self.disabled_explanation
+                self.ids.disabled_explanation.text = self.scatter_disabled_explanation
             else:
                 non_numeric_label.text = ''
                 self.ids.scatter_button.disabled = False
@@ -116,11 +116,11 @@ class GraphSession(Widget):
         
         #  and a label which explains why non-numeric y-axis values
         #  are disabled
-#        self.y_axis_disabled_explanation = Label(
-#                color = (1.0, .27, 0.0, 1.0), 
-#                pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
-#                size_hint_x = 0.5)
-#        self.chooseAxisScreen.add_widget(self.y_axis_disabled_explanation)
+        self.y_axis_disabled_label = Label(
+                color = (1.0, .27, 0.0, 1.0), 
+                pos_hint = {'x': 0.15, 'y': 0.01}, size_hint_y = 0.1, 
+                size_hint_x = 0.5)
+        self.chooseAxisScreen.add_widget(self.y_axis_disabled_label)
 
         #  Set arguments for the Next button on_press
         if (axis == 'x'):
@@ -155,9 +155,9 @@ class GraphSession(Widget):
             if self.cur_axis == 'y':
                 if df[header].dtype == 'object':
                     btn.disabled = True
-#                self.ids.y_axis_disabled_explanation.text = self.y_axis_disabled_explanation
+                self.y_axis_disabled_label.text = self.y_axis_disabled_explanation
             else:
-#                self.ids.y_axis_disabled_explanation.text = ''
+                self.y_axis_disabled_label.text = ''
                 pass
             btn.bind(on_press=self.assign_header)   
             self.headerButtons.add_widget(btn)
