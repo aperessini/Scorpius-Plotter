@@ -108,7 +108,7 @@
                             size_hint_y:     0.5
                             Widget:
                             GridLayout:
-                                id:             groupGrid
+                                id:             delimiterGrid
                                 cols:           2
                                 size_hint_x:     0.5
                                 CheckBox:
@@ -154,7 +154,8 @@
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
 #  The last children reference is for the grid layout
-                            on_press:       root.recordDelimiterChoice(self.parent.children[1].children[1].children)
+                            on_press:       root.recordDelimiterChoice()
+#                            on_press:       root.recordDelimiterChoice(self.parent.children[1].children[1].children)
                             text:           'Next' 
 
 
