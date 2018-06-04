@@ -1,3 +1,8 @@
+##  Note for future refactoring:  I have made count_desired a
+#  Kivy BooleanProperty, so all of the try-catch blocks which
+#  test for the existence of this property can be changed to just
+#  have a simple if-else statement instead, I believe.
+#
 #  This is a demo program, written by team Scorpius for CS 467, Capstone
 #  Team members:  John Carrabino, Aaron Peressini, Cheryl Freeman
 #  
@@ -7,6 +12,7 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
+from kivy.properties import BooleanProperty
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
@@ -45,6 +51,7 @@ class GraphSession(Widget):
     graph_title = StringProperty('')
     x_axis_title = StringProperty('')
     y_axis_title = StringProperty('')
+    count_desired = BooleanProperty(False)
 
     def __init__(self):
         self.cur_axis = ''
@@ -55,6 +62,7 @@ class GraphSession(Widget):
         self.y_axis = ''
         self.delim = ''
         self.non_numeric_x_axis = False
+        self.count_desired = False
         self.path = self.cwd + "\input"
         self.plotter = PyPlotter()
         super(GraphSession, self).__init__()
@@ -90,17 +98,19 @@ class GraphSession(Widget):
 
     def record_count_checkbox(self, checkbox, checkboxActive):
         if checkboxActive:
+            self.listOfDisabled = []
+            for button in self.headerButtons.children:
+                self.listOfDisabled.append(button.disabled)
             self.count_desired = True
             for button in self.headerButtons.children:
                 button.disabled = True
         else:
             self.count_desired = False
-#  To do ********
-#  Under this else: statement, I need to put some code to return
-#  the header buttons to their previously abled/disabled state.
-#  Probably, I can record the status when I enter this function,
-#  save it, and return it to that status if the checkbox has
-#  been unchecked.
+            for i, button in enumerate(self.headerButtons.children):
+                if self.listOfDisabled[i]:
+                    button.disabled = True
+                else:
+                    button.disabled = False
         
 
     def header_choices(self, axis):
@@ -261,6 +271,7 @@ class GraphSession(Widget):
         self.y_axis = ''
         self.delim = ''
         self.non_numeric_x_axis = False
+        self.count_desired = False
 
 
     def create_graph(self, buttonClicked):  
@@ -290,12 +301,15 @@ class GraphSession(Widget):
         #if(df.columns[0] == self.x_axis):
         #    print 'poophead'
         
-                
 
         if buttonClicked == self.ids.line_graph:
-            #  Thanks to https://stackoverflow.com/questions/21487329/
-            #  for the following code to set titles
-            graph = df.plot(x=[self.x_axis], y=[self.y_axis])
+            try:
+                if (self.count_desired):
+                    graph = df.groupby(self.x_axis).size().plot()
+                else:
+                    graph = df.plot(x=[self.x_axis], y=[self.y_axis])
+            except AttributeError:
+                    graph = df.plot(x=[self.x_axis], y=[self.y_axis])
         
         elif buttonClicked == self.ids.scatter_button:
             #Still does not work for datetime object; researching workarounds 5/23/2018; See: https://github.com/pandas-dev/pandas/issues/8113
@@ -303,10 +317,19 @@ class GraphSession(Widget):
         
         elif buttonClicked == self.ids.bar_button:
             #  With thanks to stackoverflow 21331722
-            graph = df.plot.bar(x=self.x_axis, y=self.y_axis)
+            try:
+                if (self.count_desired):
+                    #  Thanks to http://pbpython.com/simple-graphing-pandas.html
+                    graph = df.groupby(self.x_axis).size().plot.bar()
+                else:
+                    graph = df.plot.bar(x=self.x_axis, y=self.y_axis)
+            except AttributeError:
+                    graph = df.plot.bar(x=self.x_axis, y=self.y_axis)
 
         else:
             pass
+            #  Thanks to https://stackoverflow.com/questions/21487329/
+            #  for the following code to set titles
         graph.set(xlabel=self.x_axis_title, ylabel=self.y_axis_title, title=self.graph_title)
         plt.show()
 
@@ -358,16 +381,18 @@ class GraphSession(Widget):
         try:
             if (self.count_desired):
                 graph_hint = 'Count of ' + self.y_axis + ' versus ' + self.x_axis
+                self.ids.yTitle.hint_text = 'Count of ' + str(self.y_axis)
             else:
                 graph_hint = self.y_axis + ' versus ' + self.x_axis
+                self.ids.yTitle.hint_text = str(self.y_axis)
         except AttributeError:
-                graph_hint = self.y_axis + ' versus ' + self.x_axis
+            graph_hint = self.y_axis + ' versus ' + self.x_axis
+            self.ids.yTitle.hint_text = str(self.y_axis)
         self.ids.gTitle.text = ''
         self.ids.gTitle.hint_text = str(graph_hint)
         self.ids.xTitle.text = ''
         self.ids.xTitle.hint_text = str(self.x_axis)
         self.ids.yTitle.text = ''
-        self.ids.yTitle.hint_text = str(self.y_axis)
 
 
     def recordTitles(self, gridChildren):
