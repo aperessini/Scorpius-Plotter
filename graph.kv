@@ -12,9 +12,12 @@
         orientation:    'vertical'
         size:           self.parent.size
         pos:            self.parent.pos
+
+#  This will hold all of the screens which are displayed to our user.
         ScreenManager:
             id: sm
 
+            #  The welcome screen
             Screen:
                 size:   blayout.size
                 pos:    blayout.pos
@@ -42,6 +45,7 @@
                             on_press:       sm.current = 'screen1'
                             text:           'Next' 
 
+            #  The file-selection screen
             Screen:
                 size:   blayout.size
                 pos:    blayout.pos
@@ -82,6 +86,7 @@
                             text_size:      self.width, None
                             height:         self.texture_size[1]
 
+            #  The delimiter-selection screen
             Screen:
                 size:   blayout.size
                 pos:    blayout.pos
@@ -93,6 +98,11 @@
                     size:       self.parent.size
                     pos:        self.parent.pos
                     title:      'Select the delimiter used between data columns'
+                    #  This layout has a top row, which contains the file name,
+                    #  then a middle row which contains 3 items (the radio buttons
+                    #  for the delimiter choices, and on either side of them
+                    #  an anonymous widget used for centering the radio buttons),
+                    #  and a bottom row which contains the "Next" button.
                     BoxLayout:
                         orientation:        'vertical'
                         Label:
@@ -156,6 +166,7 @@
                             text:           'Next' 
 
 
+            #  The x-axis confirmation screen
             Screen:
                 size:       blayout.size
                 pos:        blayout.pos
@@ -196,6 +207,7 @@
                             text:           'Change Data File \nSelection' 
                             halign:         'center'
 
+            #  The y-axis confirmation screen
             Screen:
                 size:       blayout.size
                 pos:        blayout.pos
@@ -237,6 +249,7 @@
                             text:           'Change X-Axis \nSelection'
                             halign:         'center'
 
+            #  The "Choose your graph's titles" screen
             Screen:
                 size:       blayout.size
                 pos:        blayout.pos
@@ -248,6 +261,7 @@
                     pos:        self.parent.pos
                     title:      'Enter graph title and axes titles'
                     FloatLayout:
+                        #  Each text-input box has a label
                         GridLayout:
                             size_hint_x:    0.8
                             size_hint_y:    0.6
@@ -298,6 +312,8 @@
 #                            on_press:       sm.current = 'screen3'
                             text:           'Next' 
 
+            #  Screen which has buttons for which type of graph,
+            #  as well as changing the info which is graphed
             Screen:
                 size:       blayout.size
                 pos:        blayout.pos
