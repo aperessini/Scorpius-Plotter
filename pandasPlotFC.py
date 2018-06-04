@@ -54,6 +54,7 @@ class GraphSession(Widget):
         self.x_axis = ''
         self.y_axis = ''
         self.delim = ''
+        self.non_numeric_x_axis = False
         self.path = self.cwd + "\input"
         self.plotter = PyPlotter()
         super(GraphSession, self).__init__()
@@ -74,16 +75,33 @@ class GraphSession(Widget):
                 non_numeric_label.text = 'Note:  This is a non-numeric data column.'
                 self.ids.scatter_button.disabled = True
                 self.ids.disabled_explanation.text = self.scatter_disabled_explanation
+                self.non_numeric_x_axis = True
             else:
                 non_numeric_label.text = ''
                 self.ids.scatter_button.disabled = False
                 self.ids.disabled_explanation.text = ''
+                self.non_numeric_x_axis = False
             #print self.x_axis
             self.ids.sm.current = 'screenX'
         elif self.cur_axis == 'y':
             self.y_axis = btn.text.encode('ascii')
             #print self.y_axis
             self.ids.sm.current = 'screenY'
+
+    def record_count_checkbox(self, checkbox, checkboxActive):
+        if checkboxActive:
+            self.count_desired = True
+            for button in self.headerButtons.children:
+                button.disabled = True
+        else:
+            self.count_desired = False
+#  To do ********
+#  Under this else: statement, I need to put some code to return
+#  the header buttons to their previously abled/disabled state.
+#  Probably, I can record the status when I enter this function,
+#  save it, and return it to that status if the checkbox has
+#  been unchecked.
+        
 
     def header_choices(self, axis):
         """ Dynamically construct the next pop-up screen """
@@ -124,6 +142,27 @@ class GraphSession(Widget):
                 size_hint_x = 0.5,
                 )
         self.chooseAxisScreen.add_widget(self.y_axis_disabled_label)
+
+        if self.non_numeric_x_axis:
+            #  and a checkbox that the user may select if they want to
+            #  count the occurrences of their x-axis
+            self.count_x_checkbox = CheckBox(
+                    size_hint_y = 0.1, size_hint_x = 0.5,
+                    pos_hint = {'x': .0, 'y': 0.9},
+                    )
+            self.chooseAxisScreen.add_widget(self.count_x_checkbox)
+#            self.count_x_checkbox.on_active = self.record_count_checkbox(self.count_x_checkbox.active)
+            self.count_x_checkbox.bind(active=self.record_count_checkbox)
+
+            self.count_x_label = Label(
+                    pos_hint = {'x': 0.2, 'y': 0.9},
+                    text = ('Count the occurrences of my x-axis '
+                            '\n instead of using a y-axis'),
+                    size_hint_y = 0.1, 
+                    size_hint_x = 0.5,
+                    color = (0.22, 0.67, 0.91, 1))
+            self.chooseAxisScreen.add_widget(self.count_x_label)
+
 
         #  Set arguments for the Next button on_press
         if (axis == 'x'):
@@ -180,6 +219,11 @@ class GraphSession(Widget):
             contents_needed = self.x_axis
             input_is_missing_msg = self.prompt_for_x_axis
         elif (data_needed == 'y'):
+            try:
+                if (self.count_desired):
+                    self.y_axis = self.x_axis
+            except AttributeError:
+                pass
             contents_needed = self.y_axis
             input_is_missing_msg = self.prompt_for_y_axis
         else:
@@ -216,6 +260,7 @@ class GraphSession(Widget):
         self.x_axis = ''
         self.y_axis = ''
         self.delim = ''
+        self.non_numeric_x_axis = False
 
 
     def create_graph(self, buttonClicked):  
@@ -258,7 +303,6 @@ class GraphSession(Widget):
         
         elif buttonClicked == self.ids.bar_button:
             #  With thanks to stackoverflow 21331722
-#            df.groupby([df[' Loaded Class Count-hostname:port']]).count().plot(kind='bar')  #self.x_axis 
             graph = df.plot.bar(x=self.x_axis, y=self.y_axis)
 
         else:
@@ -311,7 +355,13 @@ class GraphSession(Widget):
                     pass
 
     def updateTextScreen(self):
-        graph_hint = self.y_axis + ' versus ' + self.x_axis
+        try:
+            if (self.count_desired):
+                graph_hint = 'Count of ' + self.y_axis + ' versus ' + self.x_axis
+            else:
+                graph_hint = self.y_axis + ' versus ' + self.x_axis
+        except AttributeError:
+                graph_hint = self.y_axis + ' versus ' + self.x_axis
         self.ids.gTitle.text = ''
         self.ids.gTitle.hint_text = str(graph_hint)
         self.ids.xTitle.text = ''
