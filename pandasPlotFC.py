@@ -33,6 +33,7 @@ import difflib
 import datetime
 from plotter_class import PyPlotter
 
+#  This is the parent widget, called "self" in this file and "root" in the kv file
 class GraphSession(Widget):
     
     welcome_text = ("Welcome to Scorpius Plotter, a graphing application."
@@ -63,11 +64,21 @@ class GraphSession(Widget):
         self.delim = ''
         self.non_numeric_x_axis = False
         self.count_desired = False
+        #  This could be changed, and the need for it removed,
+        #  in future versions of our application
         self.path = self.cwd + "\input"
+        #  The functions we use from John's original code in this folder
+        #  are the normalize_csv() and the get_headers() functions
         self.plotter = PyPlotter()
+        #  This calls the Widget initialization, upon which
+        #  our GraphSession is based
         super(GraphSession, self).__init__()
 
     def assign_header(self, btn):
+        """  Record the user's selection, via a color change
+            to alert the user to their choice, and
+            saving their change to the appropriate variable.
+        """
         with open(self.filename, 'rU+') as f:
             df = pd.read_csv(f, sep=self.delim, index_col=False)
         btn.color = [.3, .9, .5, 1]
@@ -89,7 +100,6 @@ class GraphSession(Widget):
                 self.ids.scatter_button.disabled = False
                 self.ids.disabled_explanation.text = ''
                 self.non_numeric_x_axis = False
-            #print self.x_axis
             self.ids.sm.current = 'screenX'
         elif self.cur_axis == 'y':
             self.y_axis = btn.text.encode('ascii')
@@ -97,6 +107,10 @@ class GraphSession(Widget):
             self.ids.sm.current = 'screenY'
 
     def record_count_checkbox(self, checkbox, checkboxActive):
+        """  Enable or disable the y-axis selection buttons,
+            and record the user's choice about whether to count
+            the x-axis or use a y-axis
+        """
         if checkboxActive:
             self.listOfDisabled = []
             for button in self.headerButtons.children:
@@ -115,7 +129,6 @@ class GraphSession(Widget):
 
     def header_choices(self, axis):
         """ Dynamically construct the next pop-up screen """
-        print self.non_numeric_x_axis
         self.cur_axis = axis
 
         #  This will hold all the other elements
@@ -162,7 +175,6 @@ class GraphSession(Widget):
                     pos_hint = {'x': .0, 'y': 0.9},
                     )
             self.chooseAxisScreen.add_widget(self.count_x_checkbox)
-#            self.count_x_checkbox.on_active = self.record_count_checkbox(self.count_x_checkbox.active)
             self.count_x_checkbox.bind(active=self.record_count_checkbox)
 
             self.count_x_label = Label(
@@ -199,10 +211,13 @@ class GraphSession(Widget):
                     self.data_needed, self.axis_missing, self.next_axis))
         self.chooseAxisScreen.add_widget(nextButton)
 
+        #  We want to disable the buttons which represent non-numerical
+        #  values, if the user is currently selecting the data to
+        #  use for their y-axis.  This disables them and explains to
+        #  the user why the buttons are disabled.
         with open(self.filename, 'rU+') as f:
             df = pd.read_csv(f, sep=self.delim, index_col=False)
 
-#        print self.headers
         someButtonsDisabled = False
         for header in self.headers:
             btn = Button(text=header)
@@ -223,6 +238,10 @@ class GraphSession(Widget):
 
     def ensureInput(
             self, data_needed, label_to_appear, next_axis):
+        """  This provides input validation--the user should not be able
+            to move forward from the file selection screen or the
+            axis-selection screen unless they have chosen an item.
+        """
         if (data_needed == 'file'):
             contents_needed = self.filename
             input_is_missing_msg = self.prompt_for_filename
@@ -298,8 +317,8 @@ class GraphSession(Widget):
         #
         self.readFile()
         df = self.df
-        print df.iloc[:,0].name
-        print df.iloc[:,0]
+#        print df.iloc[:,0].name
+#        print df.iloc[:,0]
 
         # THANK YOU : https://stackoverflow.com/questions/15891038/change-data-type-of-columns-in-pandas
         for x in df.columns:
@@ -351,12 +370,12 @@ class GraphSession(Widget):
         plt.show()
 
     def readFile(self):
-        #  This function cleans the data and puts it back in the same file
-#        self.plotter.normalizeCSV(self.filename, self.delim)
         self.df = pd.read_csv(self.filename, names=self.headers, header=0, skipinitialspace=True, index_col=False, usecols=range(0, len(self.headers)), sep=self.delim, parse_dates=[0])
     
     def recordDelimiterChoice(self):
-#    def recordDelimiterChoice(self, grid):
+        """ Records the user's delimiter choice, then reads the data file
+            to get the headers from it, for use in axis selection
+        """
 #  Thanks to https://stackoverflow.com/questions/610883
         grid = self.ids.delimiterGrid
         for x in grid.children:
@@ -365,14 +384,18 @@ class GraphSession(Widget):
                     self.delim = x.name
             except AttributeError:
                 pass
-#        print 'The delimiter right now is ' + self.delim
         #  This function cleans the data and puts it back in the same file
         self.plotter.normalizeCSV(self.filename, self.delim)
         self.headers = self.plotter.get_headers(self.filename, self.delim)
+        #  Dynamically construct the screen for axis selection
         self.header_choices('x')
 
 
     def activateDefaultDelimiter(self):
+        """  Reads the file extension of the selected data file, and
+            activates the radio button corresponding to the
+            appropriate delimiter.  User can change if desired.
+        """
         radioButtons = self.ids.delimiterGrid.children
         _, fileExtension = self.filename.split('.')
         if (fileExtension.upper() == 'CSV'):
@@ -395,6 +418,10 @@ class GraphSession(Widget):
                     pass
 
     def updateTextScreen(self):
+        """  User can accept the default titles for their graph and axes,
+            or they can type in their own.  Defaults are constructed from
+            the data file column headings.
+        """
         try:
             if (self.count_desired):
                 graph_hint = 'Count of ' + self.y_axis + ' versus ' + self.x_axis
@@ -413,6 +440,8 @@ class GraphSession(Widget):
 
 
     def recordTitles(self, gridChildren):
+        """  If user hasn't typed anything, the default titles are saved.
+        """
         for item in gridChildren:
             try:
                 if item.text == '':
