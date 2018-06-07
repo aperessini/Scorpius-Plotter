@@ -51,7 +51,6 @@
                 pos:    blayout.pos
                 name:   'screen1'
                 id:     file_screen
-                #on_enter:       root.clear_previous_selections()
                 Popup:
                     id:         file_popup
                     size:       self.parent.size
@@ -69,7 +68,7 @@
                         FileChooserIconView:
                             id:             file_chooser
                             path:           root.path
-                            on_selection:   root.clear_previous_selections();root.filename = self.selection[0];print root.filename
+                            on_selection:   root.clear_previous_selections();root.filename = self.selection[0];
                         Button:
                             id:             next_screen
                             size_hint_y:    0.15
@@ -197,7 +196,6 @@
                             on_press:       root.clear_axes_selection()
                             text:           'Change X-Axis \nSelection'
                             halign:         'center'
-                            #text_size:      self.size 
                         Button:
                             id:             previous_screen
                             size_hint_y:    0.15
@@ -222,14 +220,12 @@
                         pos:            self.parent.pos
                         Label:
                             text:       'You have selected ' + root.y_axis + ' as your y-axis. Continue?'
-                            #text:       root.filename
                             
                         Button:
                             id:             next_screen
                             size_hint_y:    0.15
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
-#                            on_press:       root.updateTextScreen();sm.current = 'textEnterScreen';print root.x_axis; print root.y_axis
                             on_press:       sm.current = 'textEnterScreen'
                             text:           'Next' 
                         Button:
@@ -275,7 +271,6 @@
                             TextInput:
                                 name:       'graph title'
                                 id: gTitle
-                                #hint_text:       root.y_axis + ' versus ' + root.x_axis
                                 size_hint_y: None
                                 size_hint_x:    0.75
                                 height:     30
@@ -287,7 +282,6 @@
                             TextInput:
                                 name:       'x axis title'
                                 id: xTitle
-                                #hint_text:       root.x_axis
                                 size_hint_y: None
                                 size_hint_x:    0.75
                                 height:     30
@@ -299,7 +293,6 @@
                             TextInput:
                                 name:       'y axis title'
                                 id: yTitle
-                                #hint_text:       root.y_axis
                                 size_hint_y: None
                                 size_hint_x:    0.75
                                 height:     30
@@ -309,7 +302,6 @@
                             size_hint_x:    0.2
                             pos_hint:       {'x': 0.79, 'y': 0.01}
                             on_press:       textEnterPopup.dismiss(); root.recordTitles(self.parent.children[1].children)
-#                            on_press:       sm.current = 'screen3'
                             text:           'Next' 
 
             #  Screen which has buttons for which type of graph,
@@ -324,8 +316,6 @@
                     pos:    self.parent.pos
                     title:  'Select the type of graph you wish to see'
                 FloatLayout:
-                    #graph_now: line_graph
-#                    orientation:    'vertical'
                     size:           self.parent.size
                     pos:            self.parent.pos
                     Label:
