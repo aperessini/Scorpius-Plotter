@@ -115,6 +115,7 @@ class GraphSession(Widget):
 
     def header_choices(self, axis):
         """ Dynamically construct the next pop-up screen """
+        print self.non_numeric_x_axis
         self.cur_axis = axis
 
         #  This will hold all the other elements
@@ -272,6 +273,22 @@ class GraphSession(Widget):
         self.delim = ''
         self.non_numeric_x_axis = False
         self.count_desired = False
+
+
+    def clear_axes_selection(self):
+        """  The previous axes chosen need to be erased.
+        """
+        self.x_axis = ''
+        self.y_axis = ''
+        self.non_numeric_x_axis = False
+        self.count_desired = False
+        self.header_choices('x')
+
+
+    def clear_y_axis_only(self):
+        self.y_axis = ''
+        self.count_desired = False
+        self.header_choices('y')
 
 
     def create_graph(self, buttonClicked):  
