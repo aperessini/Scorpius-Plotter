@@ -43,7 +43,7 @@ class GraphSession(Widget):
     prompt_for_x_axis = "Please select the column of data you wish to use for your graph's x-axis."
     prompt_for_y_axis = "Please select the column of data you wish to use for your graph's y-axis."
     scatter_disabled_explanation = "A scatter graph will not work with your non-numeric x-axis values."
-    y_axis_disabled_explanation = ("The plotter is only able to graph numeric value on the y-axis.  "
+    y_axis_disabled_explanation = ("The plotter is only able to graph numeric values on the y-axis.  "
                                     "\nNon-numeric data columns are disabled.")
     x_axis = StringProperty('')
     y_axis = StringProperty('')
@@ -394,7 +394,7 @@ class GraphSession(Widget):
             except AttributeError:
                 pass
         #  This function cleans the data and puts it back in the same file
-        self.plotter.normalizeCSV(self.filename, self.delim)
+#        self.plotter.normalizeCSV(self.filename, self.delim)
         self.headers = self.plotter.get_headers(self.filename, self.delim)
         #  Dynamically construct the screen for axis selection
         self.header_choices('x')
