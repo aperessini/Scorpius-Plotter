@@ -349,6 +349,8 @@ class GraphSession(Widget):
         
         elif buttonClicked == self.ids.scatter_button:
             #Still does not work for datetime object; researching workarounds 5/23/2018; See: https://github.com/pandas-dev/pandas/issues/8113
+            df[self.x_axis] = pd.to_numeric(df[self.x_axis], errors='coerce') 
+            df[self.y_axis] = pd.to_numeric(df[self.y_axis], errors='coerce') 
             graph = df.plot.scatter(x=self.x_axis, y=self.y_axis) #'Date/Time' is not in index error
         
         elif buttonClicked == self.ids.bar_button:
